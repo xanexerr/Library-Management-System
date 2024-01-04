@@ -59,10 +59,19 @@
     }
     ?>
     <div class="navbar bg-dark">
-        <div>
-            <a class="btn btn-warning " href="index.php">แก้ไขบัญชีผู้ใช้</a>
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-auto">
+                    <a class="btn btn-warning disabled" href="admin-main.php">แก้ไขบัญชีผู้ใช้</a>
+                </div>
+                <div class="col-auto">
+
+                    <a href="logout.php" class="btn btn-danger">ออกจากระบบ</a>
+                </div>
+            </div>
         </div>
     </div>
+
     <?php
     $updatestatus = "SELECT COUNT(*) FROM users";
     $stmt = $conn->query($updatestatus);
@@ -71,20 +80,32 @@
     ?>
     <?php
     $limit = 12;
-    $stmt = $conn->prepare("SELECT COUNT(*) FROM users ");
+    $stmt = $conn->prepare("SELECT COUNT(*) FROM users");
     $stmt->execute();
     $totalRows = $stmt->fetchColumn();
     $totalPages = ceil($totalRows / $limit);
     $currentPage = isset($_GET['page']) ? $_GET['page'] : 1;
     $offset = ($currentPage - 1) * $limit;
-    $stmt = $conn->prepare("SELECT * FROM users ORDER BY user_id DESC LIMIT :limit OFFSET :offset");
+
+    $order = "ORDER BY user_id DESC";
+    if (isset($_GET['work_type_filter'])) {
+        $work_type_filter = ($_GET['work_type_filter']);
+        if ($work_type_filter === 'ASC') {
+            $order = "ORDER BY user_id ASC";
+        } elseif ($work_type_filter === 'username_ASC') {
+            $order = "ORDER BY username ASC";
+        } elseif ($work_type_filter === 'username_DESC') {
+            $order = "ORDER BY username DESC";
+        }
+    }
+
+    $stmt = $conn->prepare("SELECT * FROM users $order LIMIT :limit OFFSET :offset");
     $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
     $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
     $stmt->execute();
     $usersData = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
     ?>
-
-
     <div class="flex-container">
         <div class="container ">
             <div class="my-3 bg-body  shadow">
@@ -98,6 +119,19 @@
                                     จำนวนบัญชีผู้ใช้ :
                                     <?php echo $totalusers; ?>
                                 </p>
+
+                            </div>
+                            <div class="ml-auto col-2">
+                                <form class="m-0 rounded-top  rounded col-12" method="GET">
+                                    <select class="form-control " name="work_type_filter" onchange="this.form.submit()">
+                                        <option value="DESC" <?php if (isset($_GET['work_type_filter']) && $_GET['work_type_filter'] === 'DESC')
+                                            echo 'selected'; ?>>ลำดับ : มาก -> น้อย
+                                        </option>
+                                        <option value="ASC" <?php if (isset($_GET['work_type_filter']) && $_GET['work_type_filter'] === 'ASC')
+                                            echo 'selected'; ?>>ลำดับ : น้อย -> มาก
+                                        </option>
+                                    </select>
+                                </form>
                             </div>
                             <div class="col">
                                 <div class="table-responsive">
@@ -107,7 +141,7 @@
                                                 <tr class="text-center text-light bg-dark col-12">
                                                     <th class='col-2'>รหัสผู้ใช้</th>
                                                     <th class='col-2'>ชื่อบัญชี</th>
-                                                    <th class='col-4'>ชื่อจริง</th>
+                                                    <th class='col-2'>ชื่อจริง</th>
                                                     <th class='col-2'>นามสกุล</th>
                                                     <th class='col-2'>สถานะ</th>
                                                     <th class='col-2'>จัดการ/สถานะ</th>
@@ -115,7 +149,7 @@
                                             </thead>
                                             <tbody>
                                                 <?php foreach ($usersData as $row): ?>
-                                                    <tr class="text-left">
+                                                    <tr class="text-center">
                                                         <td>
                                                             <?php echo $row['user_id']; ?>
                                                         </td>
@@ -125,16 +159,17 @@
                                                         <td>
                                                             <?php echo $row['user_fname']; ?>
                                                         </td>
-                                                        <td>
-                                                            <?php echo $row['role']; ?>
-                                                        </td>
                                                         <td class='text-center'>
                                                             <?php echo $row['user_lname']; ?>
                                                         </td>
                                                         <td class="text-center">
+                                                            <?php echo $row['role']; ?>
+                                                        </td>
+
+                                                        <td class="text-center">
                                                             <div class="btn-group  ">
 
-                                                                <a href="admin-wp-edit.php?id=<?php echo $row['user_id']; ?>"
+                                                                <a href="admin-users.php?id=<?php echo $row['user_id']; ?>"
                                                                     class="btn btn-warning">แก้ไขข้อมูล</a>
 
                                                             </div>
