@@ -24,26 +24,6 @@ require('connection.php');
             // ALTER TABLE `borrow` CHANGE `feeperday` `feeperday` INT(11) NOT NULL DEFAULT '$fee';
             //update `borrow` SET `feeperday` = '$fee';
             
-            if (isset($_POST['fee'])) {
-                $fee = $_POST['fee'];
-
-                // Sanitize the input to prevent SQL injection
-                $fee = mysqli_real_escape_string($connection, $fee);
-
-                // Update the column data type and default value based on the posted fee value
-                $alterQuery = "ALTER TABLE `borrow` MODIFY `feeperday` INT(11) NOT NULL DEFAULT '$fee'";
-
-
-                // Update the existing rows in the table with the new fee value
-                $updateQuery = "UPDATE `borrow` SET `feeperday` = '$fee'";
-                if (($connection->query($updateQuery) === TRUE) && ($connection->query($alterQuery) === TRUE)) {
-                    echo '<script>';
-                    echo 'alert("แก้ไขค่าปรับต่อวันแล้ว");';
-                    echo '</script>';
-                } else {
-                    echo "Error updating rows: " . $connection->error;
-                }
-            }
 
             if ($result) {
                 // Fetch the last row from the result set
@@ -51,23 +31,18 @@ require('connection.php');
 
                 // Check if there's a row fetched
                 if ($row) {
-                    // Get the 'feeperday' value for the last row
                     $feeperdayValue = $row['feeperday'];
                 } else {
-                    // If no rows were found, set a default value or handle it accordingly
-                    $feeperdayValue = ""; // Or set a default value
+                    $feeperdayValue = "";
                 }
             } else {
-                // If the query fails, handle the error (e.g., display an error message)
-                echo "Error executing the query: " . $connection->error;
+                echo "เกิดข้อผิดพลาด : " . $connection->error;
             }
-
-            // Don't forget to close the connection after you're done
             $connection->close();
             ?>
             <div>
                 <form class="p-4 px-5" style="min-width: 450px; width:768px;" name="form1" method="post"
-                    action="Fee.php">
+                    action="php/Fee-value.php">
                     <div class="mb-3">
                         <p class="h5 m-1">ค่าปรับต่อวัน
                         </p>

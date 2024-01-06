@@ -46,26 +46,26 @@
     <div class="navbar bg-dark">
         <div class="container">
             <div class="row align-items-center">
-                <div class="col-auto">
+                <div class="col-auto px-1">
                     <a class="btn btn-warning" href="librarian-users.php">แก้ไขบัญชีผู้ใช้</a>
                 </div>
 
-                <div class="col-auto">
-                    <a class="btn btn-warning" href="lb-book.php">หนังสือทั้งหมด</a>
+                <div class="col-auto px-1">
+                    <a class="btn btn-dark px-2 border-2 border-warning disabled" href="lb-book.php">หนังสือทั้งหมด</a>
                 </div>
-                <div class="col-auto">
-                    <a class="btn btn-warning" href="#">เพิ่มหนังสือ</a>
+                <div class="col-auto px-1">
+                    <a class="btn btn-warning " href="add-book.php">เพิ่มหนังสือ</a>
                 </div>
-                <div class="col-auto">
-                    <a class="btn btn-warning" href="#">ยืมหนังสือ</a>
+                <div class="col-auto px-1">
+                    <a class="btn btn-warning" href="borrowing.php">ยืมหนังสือ</a>
                 </div>
-                <div class="col-auto">
-                    <a class="btn btn-warning" href="#">คืนหนังสือ</a>
+                <div class="col-auto px-1">
+                    <a class="btn btn-warning" href="returning.php">คืนหนังสือ</a>
                 </div>
-                <div class="col-auto">
-                    <a class="btn btn-warning" href="#">ข้อมูลการยืมหนังสือ</a>
+                <div class="col-auto px-1">
+                    <a class="btn btn-warning " href="borrowhistory.php">ข้อมูลการยืมหนังสือ</a>
                 </div>
-                <div class="col-auto">
+                <div class="col-auto px-1">
                     <a href="logout.php" class="btn btn-danger">ออกจากระบบ</a>
                 </div>
             </div>
@@ -73,84 +73,179 @@
     </div>
     <?php
     require('connection.php');
-    $sql = "SELECT book_id, book_name, book_type, author, bookvalue, borrowstatus FROM books";
 
-    // Execute the query
-    $result = $connection->query($sql);
+    $searchQuery = isset($_GET['search_query']) ? $_GET['search_query'] : '';
+    $limit = 10;
+    $currentPage = isset($_GET['page']) ? $_GET['page'] : 1;
+    $offset = ($currentPage - 1) * $limit;
 
-    // Check if there are results
-    if ($result && $result->num_rows > 0) {
+    if (!empty($searchQuery)) {
+        $search = '%' . $searchQuery . '%';
+        $stmt = $conn->prepare("SELECT COUNT(*) as count 
+                            FROM books 
+                            WHERE (book_id LIKE :search_query 
+                            OR book_name LIKE :search_query 
+                            OR author LIKE :search_query 
+                            OR book_type LIKE :search_query)");
+        $stmt->bindValue(':search_query', $search, PDO::PARAM_STR);
+        $stmt->execute();
+        $totalRows = $stmt->fetch(PDO::FETCH_ASSOC)['count'];
+
+        $stmt = $conn->prepare("SELECT book_id, book_name, book_type, author, bookvalue, borrowstatus 
+                            FROM books 
+                            WHERE (book_id LIKE :search_query 
+                            OR book_name LIKE :search_query 
+                            OR author LIKE :search_query 
+                            OR book_type LIKE :search_query) 
+                            ORDER BY book_id DESC 
+                            LIMIT :limit OFFSET :offset");
+        $stmt->bindValue(':search_query', $search, PDO::PARAM_STR);
+    } else {
+        $countStmt = $conn->prepare("SELECT COUNT(*) as count FROM books");
+        $countStmt->execute();
+        $totalRows = $countStmt->fetch(PDO::FETCH_ASSOC)['count'];
+
+        $stmt = $conn->prepare("SELECT book_id, book_name, book_type, author, bookvalue, borrowstatus 
+                            FROM books  
+                            ORDER BY book_id DESC 
+                            LIMIT :limit OFFSET :offset");
+    }
+
+    $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
+    $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
+    $stmt->execute();
+    $booksData = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    $totalPages = ceil($totalRows / $limit);
+
+    if ($booksData && count($booksData) > 0) {
         ?>
         <div class="flex-container">
             <div class="container ">
                 <div class="my-3 bg-body  shadow ">
                     <!-- ... (Your existing HTML structure before displaying book information) -->
-                    <div class="px-4">
-                        <div class="">
-                            <p class="fs-5 rounded p-1 px-3 m-0 form-control border-0 text-center">
-                                Book Information
-                            </p>
-                        </div>
+                    <div class="">
+
+
                     </div>
 
-                    <div class="col mx-3">
-                        <div class="table-responsive">
-                            <table class="table table-bordered table-sm m-0">
-                                <thead>
-                                    <tr class="text-center text-light bg-dark col-10">
-                                        <th class='col-1'>รหัสหนังสือ</th>
-                                        <th class='col-3'>ชื่อหนังสือ</th>
-                                        <th class='col-2'>ประเภทหนังสือ</th>
-                                        <th class='col-2'>ผู้แต่ง</th>
-                                        <th class='col-1'>จำนวนนหนังสือ</th>
-                                        <th class='col-1'>สถานะ</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <?php while ($row = $result->fetch_assoc()): ?>
-                                        <tr class="text-center">
-                                            <td>
-                                                <?php echo $row['book_id']; ?>
-                                            </td>
-                                            <td>
-                                                <?php echo $row['book_name']; ?>
-                                            </td>
-                                            <td>
-                                                <?php echo $row['book_type']; ?>
-                                            </td>
-                                            <td>
-                                                <?php echo $row['author']; ?>
-                                            </td>
-                                            <td>
-                                                <?php echo $row['bookvalue']; ?>
-                                            </td>
-                                            <td class=" <?php
-                                            if ($row['borrowstatus'] == $row['bookvalue']) {
-                                                echo 'bg-danger text-white';
-                                            } elseif ($row['borrowstatus'] > 0) {
-                                                echo 'bg-warning text-dark';
+
+                    <div class="col">
+                        <form class="m-0 rounded-top  rounded col-12" method="GET">
+                            <div class="input-group container bg-secondary p-2  ">
+
+
+                                <input type="text" class="form-control ml-3 " placeholder="ค้นหา...." name="search_query"
+                                    value="<?php if (isset($search_query)) {
+                                        echo $search_query;
+                                    }
+                                    ?>">
+                                <button class="btn btn-primary rounded-end px-3 mr-3 col-2" type="submit"
+                                    style="font-size: 1em;">
+
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor"
+                                        class="bi bi-search" viewBox="0 0 16 16" style="vertical-align: middle;">
+                                        <path
+                                            d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0" />
+                                    </svg> ค้นหาหนังสือ
+                                </button>
+                            </div>
+                    </div>
+                    </form>
+                    <div class="">
+                        <p class="fs-5 p-2 text-center bg-dark text-white">
+                            พบข้อมูลหนังสือ
+                            <?php echo $totalRows ?> เล่ม
+                        </p>
+                    </div>
+                    <div class="table-responsive p-3">
+                        <table class="table table-bordered table-sm m-0 ">
+                            <thead>
+                                <tr class="text-center text-light bg-dark col-10">
+                                    <th class='col-1'>รหัสหนังสือ</th>
+                                    <th class='col-3'>ชื่อหนังสือ</th>
+                                    <th class='col-2'>ประเภทหนังสือ</th>
+                                    <th class='col-2'>ผู้แต่ง</th>
+                                    <th class='col-1'>จำนวนนหนังสือ</th>
+                                    <th class='col-1'>สถานะ</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php foreach ($booksData as $row): ?>
+                                    <tr class="text-center">
+                                        <td>
+                                            <?php echo $row['book_id']; ?>
+                                        </td>
+                                        <td>
+                                            <?php echo $row['book_name']; ?>
+                                        </td>
+                                        <td>
+                                            <?php echo $row['book_type']; ?>
+                                        </td>
+                                        <td>
+                                            <?php echo $row['author']; ?>
+                                        </td>
+                                        <td>
+                                            <?php echo $row['bookvalue']; ?>
+                                        </td>
+                                        <td class=" <?php
+                                        if ($row['borrowstatus'] == $row['bookvalue']) {
+                                            echo 'bg-danger text-white';
+                                        } elseif ($row['borrowstatus'] > 0) {
+                                            echo 'bg-warning text-dark';
+                                        } else {
+                                            echo 'bg-success text-white';
+                                        }
+                                        ?>">
+                                            <?php
+                                            if ($row['borrowstatus'] > 0) {
+                                                echo 'ว่าง ' . $row['bookvalue'] - $row['borrowstatus'] . ' เล่ม';
                                             } else {
-                                                echo 'bg-success text-white';
+                                                echo 'ว่าง';
                                             }
-                                            ?>">
-                                                <?php
-                                                if ($row['borrowstatus'] > 0) {
-                                                    echo 'ว่าง ' . $row['bookvalue'] - $row['borrowstatus'] . ' เล่ม';
-                                                } else {
-                                                    echo 'ว่าง';
-                                                }
-                                                ?>
+                                            ?>
 
-                                            </td>
-                                        </tr>
-                                    <?php endwhile; ?>
-                                </tbody>
-                            </table>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            </tbody>
+                        </table>
+                        <div class="container p-3 ">
+                            <nav aria-label=" Page navigation example  ">
+                                <ul class="pagination justify-content-center m-0">
+                                    <?php if ($currentPage > 1): ?>
+                                        <li class="page-item">
+                                            <a class="page-link bg-dark text-white"
+                                                href="?page=<?php echo ($currentPage - 1); ?>" aria-label="Previous">
+                                                <span aria-hidden="true">
+                                                    &#60;
+                                                </span>
+                                            </a>
+                                        </li>
+                                    <?php endif; ?>
+                                    <?php for ($i = 1; $i <= $totalPages; $i++): ?>
+                                        <li class="page-item <?php echo ($i == $currentPage) ? 'active' : ''; ?>">
+                                            <a class="page-link  " href="?page=<?php echo $i; ?>">
+                                                <?php echo $i; ?>
+                                            </a>
+                                        </li>
+                                    <?php endfor; ?>
+                                    <?php if ($currentPage < $totalPages): ?>
+                                        <li class="page-item">
+                                            <a class="page-link bg-dark text-white"
+                                                href="?page=<?php echo ($currentPage + 1); ?>" aria-label="Next">
+                                                <span aria-hidden="true"> &#62;</span>
+                                            </a>
+                                        </li>
+                                    <?php endif; ?>
+                                </ul>
+                            </nav>
                         </div>
                     </div>
-                    <!-- ... (Rest of your existing HTML structure) -->
                 </div>
+
             </div>
+        </div>
         </div>
         <?php
     } else {

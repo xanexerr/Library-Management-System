@@ -64,16 +64,16 @@
                     <a class="btn btn-warning" href="lb-book.php">หนังสือทั้งหมด</a>
                 </div>
                 <div class="col-auto">
-                    <a class="btn btn-warning" href="#">เพิ่มหนังสือ</a>
+                    <a class="btn btn-warning" href="add-book.php">เพิ่มหนังสือ</a>
                 </div>
                 <div class="col-auto">
-                    <a class="btn btn-warning" href="#">ยืมหนังสือ</a>
+                    <a class="btn btn-warning" href="borrowing.php">ยืมหนังสือ</a>
                 </div>
                 <div class="col-auto">
-                    <a class="btn btn-warning" href="#">คืนหนังสือ</a>
+                    <a class="btn btn-warning" href="returning.php">คืนหนังสือ</a>
                 </div>
                 <div class="col-auto">
-                    <a class="btn btn-warning" href="#">ข้อมูลการยืมหนังสือ</a>
+                    <a class="btn btn-warning" href="borrowhistory.php">ข้อมูลการยืมหนังสือ</a>
                 </div>
                 <div class="col-auto">
                     <a href="logout.php" class="btn btn-danger">ออกจากระบบ</a>
@@ -82,20 +82,52 @@
         </div>
     </div>
 
+    <?php
+    $totalBooksQuery = "SELECT COUNT(book_id) AS total_books FROM `books`";
+    $totalBooksResult = $conn->query($totalBooksQuery);
+    $totalBooks = $totalBooksResult->fetch(PDO::FETCH_ASSOC)['total_books'];
 
+    // Query to get total number of students
+    $totalStudentsQuery = "SELECT COUNT(user_id) AS total_students FROM users WHERE role = 'student'";
+    $totalStudentsResult = $conn->query($totalStudentsQuery);
+    $totalStudents = $totalStudentsResult->fetch(PDO::FETCH_ASSOC)['total_students'];
+
+    // Query to get number of books not returned
+    $notReturnedQuery = "SELECT COUNT(user_id) AS not_returned_books FROM `borrow` WHERE returnstatus = '0'";
+    $notReturnedResult = $conn->query($notReturnedQuery);
+    $notReturned = $notReturnedResult->fetch(PDO::FETCH_ASSOC)['not_returned_books'];
+
+    // Query to calculate overdue fees
+    $FeeQuery = "SELECT feeperday FROM `borrow` ORDER BY borrow_id DESC LIMIT 1";
+    $FeeResult = $conn->query($FeeQuery);
+    if ($FeeResult) {
+        $Fee = $FeeResult->fetch(PDO::FETCH_ASSOC)['feeperday'];
+        // Now $Fee contains the 'feeperday' value from the first row based on the descending order
+    } else {
+        // Handle error if query fails
+        echo "Error executing query";
+    }
+
+
+    // Display or use the retrieved data as needed
+    
+
+    ?>
     <div class="flex-container ">
         <div class="container  ">
             <div class="my-3 bg-body  shadow bg-dark">
                 <div class=" justify-content-center ">
-                    <label>จำนวนหนังสือทั้งหมด</label><br>
+                    <label>จำนวนหนังสือทั้งหมด </label>
+                    <?php echo $totalBooks ?><br>
 
-                    <label>จำนวนสมาชิกทั้งหมด</label><br>
+                    <label>จำนวนสมาชิกทั้งหมด</label>
+                    <?php echo $totalStudents; ?><br>
 
-                    <label>จำนวนการยืมหนังสือทั้งหมด</label><br>
+                    <label>จำนวนการยืมหนังสือทั้งหมด</label>
+                    <?php echo $notReturned; ?><br>
 
-                    <label>จำนวนหนังสือที่ยังไม่คืน</label><br>
-
-                    <label>ค่าธรรมเนียมยืมหนังสือเลยเวลา</label><br>
+                    <label>ค่าธรรมเนียมยืมหนังสือเลยเวลา </label>
+                    <?php echo $Fee; ?> บาทต่อวัน<br>
                 </div>
             </div>
         </div>

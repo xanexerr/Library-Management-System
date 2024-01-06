@@ -56,27 +56,27 @@
     <div class="navbar bg-dark">
         <div class="container">
             <div class="row align-items-center">
+                <div class="col-auto px-1">
+                    <a class="btn btn-dark px-2 border-2 border-warning disabled"
+                        href="librarian-users.php">แก้ไขบัญชีผู้ใช้</a>
+                </div>
 
-                <div class="col-auto">
-                    <a class="btn btn-dark border-warning disabled" href="librarian-users.php">แก้ไขบัญชีผู้ใช้</a>
+                <div class="col-auto px-1">
+                    <a class="btn btn-warning " href="lb-book.php">หนังสือทั้งหมด</a>
                 </div>
-                <div class="col-auto">
-                    <a class="btn btn-warning" href="#">การยืมหนังสือ</a>
+                <div class="col-auto px-1">
+                    <a class="btn btn-warning " href="add-book.php">เพิ่มหนังสือ</a>
                 </div>
-                <div class="col-auto">
-                    <a class="btn btn-warning" href="#">ข้อมูลการยืมหนังสือ</a>
+                <div class="col-auto px-1">
+                    <a class="btn btn-warning" href="borrowing.php">ยืมหนังสือ</a>
                 </div>
-                <div class="col-auto">
-                    <a class="btn btn-warning" href="#">หนังสือทั้งหมด</a>
+                <div class="col-auto px-1">
+                    <a class="btn btn-warning" href="returning.php">คืนหนังสือ</a>
                 </div>
-                <div class="col-auto">
-                    <a class="btn btn-warning" href="#">เพิ่มหนังสือใหม่</a>
+                <div class="col-auto px-1">
+                    <a class="btn btn-warning " href="borrowhistory.php">ข้อมูลการยืมหนังสือ</a>
                 </div>
-                
-                <div class="col-auto">
-                    <a class="btn btn-success" href="librarian_main.php">กลับหน้าแรก</a>
-                </div>
-                <div class="col-auto">
+                <div class="col-auto px-1">
                     <a href="logout.php" class="btn btn-danger">ออกจากระบบ</a>
                 </div>
             </div>
@@ -132,7 +132,7 @@
     $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
     $stmt->execute();
     $usersData = $stmt->fetchAll(PDO::FETCH_ASSOC);
-?>
+    ?>
     <div class="flex-container">
         <div class="container ">
             <div class="my-3 bg-body  shadow ">
@@ -227,7 +227,7 @@
                                                     <div class="btn-group  ">
 
                                                         <a href="librarian-user-edit.php?id=<?php echo $row['user_id']; ?>"
-                                                            class="btn btn-warning">แก้ไขข้อมูล</a>
+                                                            class="btn btn-warning px-2">แก้ไขข้อมูล</a>
 
                                                     </div>
                                                 </td>
