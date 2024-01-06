@@ -1,6 +1,6 @@
 <?php
 session_start();
-require 'connection.php';
+require '../connection.php';
 
 $username = $connection->real_escape_string($_POST['username']);
 $password = $connection->real_escape_string($_POST['password']);
@@ -10,7 +10,7 @@ $result = $connection->query($strSQL);
 
 if (!$result || $result->num_rows === 0) {
     echo '<script>alert("เกิดข้อผิดพลาด! กรุณากรอกใหม่อีกครั้ง");</script>';
-    echo '<script>window.location.href = "login.php";</script>';
+    echo '<script>window.location.href = "../login.php";</script>';
     exit;
 } else {
     $objResult = $result->fetch_assoc();
@@ -20,9 +20,11 @@ if (!$result || $result->num_rows === 0) {
     $_SESSION["user_lname"] = $objResult["user_lname"];
     session_write_close();
     if ($objResult["role"] == "admin") {
-        header("location: admin-main.php");
+        header("location: ../admin-main.php");
+    } elseif ($objResult["role"] == "librarian") {
+        header("location: ../librarian_main.php");
     } else {
-        header("location: librarain_main.php");
+        header("location: ../student_main.php");
     }
 }
 $connection->close();

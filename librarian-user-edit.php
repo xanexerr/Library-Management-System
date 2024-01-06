@@ -20,7 +20,7 @@ include("header.php")
         echo '</script>';
         exit();
     } else {
-        if ($_SESSION["role"] !== 'admin' or $_SESSION["role"] !== 'librarian') {
+        if ($_SESSION["role"] !== 'librarian') {
             echo '<script>';
             echo 'alert("คุณไม่มีสิทธิเข้าถึง!");';
             echo 'window.location.href = "index.php";';
@@ -67,24 +67,16 @@ include("header.php")
                             <label for="user_lname" class="form-label mt-1">นามสกุล</label>
                             <input type="text" class="form-control" name="user_lname"
                                 value="<?php echo $row['user_lname']; ?>" required>
-
                             <label for="role" class="form-label mt-1">สถานะ</label>
                             <select class="form-control" name="role" required>
-                                <option value="admin" <?php if ($row['role'] == 'admin') {
-                                    echo 'selected';
-                                } ?>>ผู้ดูแลระบบ</option>
-                                <option value="librarian" <?php if ($row['role'] == 'librarian') {
-                                    echo 'selected';
-                                } ?>>บรรณารักษณ์</option>
                                 <option value="student" <?php if ($row['role'] == 'student') {
                                     echo 'selected';
                                 } ?>>นักเรียน</option>
                             </select>
 
-
                             <button type="submit" value="submit"
                                 class="mt-3 btn btn-success w-100">บันทึกการเปลี่ยนแปลง</button>
-                            <a href="admin-main.php" class="mt-1 btn btn-danger w-100">ยกเลิก</a>
+                            <a href="librarian-users.php" class="mt-1 btn btn-danger w-100">ยกเลิก</a>
                         </form>
 
                     <?php endforeach; ?>

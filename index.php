@@ -9,7 +9,6 @@
     <title>โปรแกรมยืมหนังสือ</title>
 </head>
 
-<!-- ตรวจสอ login & role-->
 <?php
 session_start();
 require('connection.php');
@@ -19,12 +18,17 @@ if (!isset($_SESSION["username"])) {
     echo 'window.location.href = "login.php";';
     echo '</script>';
     exit();
+} else {
+    if ($_SESSION["role"] == "admin") {
+        header("location: admin-main.php");
+    } else {
+        header("location: librarian_main.php");
+    }
 }
 ?>
 
 <body>
-    <div class="container">
-    </div>
+
 </body>
 <?php include('script.php'); ?>
 

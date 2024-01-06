@@ -8,7 +8,8 @@ require('connection.php');
 ?>
 
 
-<body style="background-color:#2F5597">
+<body
+    style="background-color:#2F5597; background-image: url('img/bg.jpg'); background-position: center; background-size: cover; ">
     <div class=" container d-flex justify-content-center align-items-center  p-5">
         <div class="g-0 border rounded overflow-hidden flex-md-row my-4  shadow-sm h-md-250 position-relative"
             style="background-color:#FFFFFF">
@@ -19,7 +20,7 @@ require('connection.php');
 
             <div>
                 <form class="p-4 px-5" style="min-width: 450px; width:768px;" name="form1" method="post"
-                    action="check_login.php">
+                    action="php/check_login.php">
                     <div class="mb-3">
                         <p class="h5 m-1">ชื่อบัญชีผู้ใช้</p>
                         <input type="text" class="form-control" name="username" id="username" required>
