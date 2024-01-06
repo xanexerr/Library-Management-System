@@ -132,10 +132,7 @@
     $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
     $stmt->execute();
     $usersData = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-
-
-    ?>
+?>
     <div class="flex-container">
         <div class="container ">
             <div class="my-3 bg-body  shadow ">

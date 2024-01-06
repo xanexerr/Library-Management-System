@@ -9,6 +9,7 @@ $strSQL = "SELECT * FROM users WHERE username = '$username' AND password = '$pas
 $result = $connection->query($strSQL);
 
 if (!$result || $result->num_rows === 0) {
+    echo $username, $password;
     echo '<script>alert("เกิดข้อผิดพลาด! กรุณากรอกใหม่อีกครั้ง");</script>';
     echo '<script>window.location.href = "../login.php";</script>';
     exit;

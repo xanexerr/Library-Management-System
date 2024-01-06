@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 <?php include('header.php'); ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -65,4 +64,5 @@ if (!isset($_SESSION["username"])) {
 <?php include('script.php'); ?>
 
 >>>>>>> e8e6f18fc4e84e741c7390069d2e2a561dc90624
+
 </html>

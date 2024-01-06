@@ -61,7 +61,7 @@
                 </div>
 
                 <div class="col-auto">
-                    <a class="btn btn-warning" href="#">หนังสือทั้งหมด</a>
+                    <a class="btn btn-warning" href="lb-book.php">หนังสือทั้งหมด</a>
                 </div>
                 <div class="col-auto">
                     <a class="btn btn-warning" href="#">เพิ่มหนังสือ</a>
@@ -83,11 +83,19 @@
     </div>
 
 
-    <div class="flex-container">
-        <div class="container ">
-            <div class="my-3 bg-body  shadow">
+    <div class="flex-container ">
+        <div class="container  ">
+            <div class="my-3 bg-body  shadow bg-dark">
                 <div class=" justify-content-center ">
+                    <label>จำนวนหนังสือทั้งหมด</label><br>
 
+                    <label>จำนวนสมาชิกทั้งหมด</label><br>
+
+                    <label>จำนวนการยืมหนังสือทั้งหมด</label><br>
+
+                    <label>จำนวนหนังสือที่ยังไม่คืน</label><br>
+
+                    <label>ค่าธรรมเนียมยืมหนังสือเลยเวลา</label><br>
                 </div>
             </div>
         </div>
