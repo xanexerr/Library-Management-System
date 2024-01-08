@@ -10,4 +10,6 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="css/custom.css" rel="stylesheet">
     <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="icon" href="img/appicon.png" type="image/x-icon">
+    <title>ระบบห้องสมุดt</title>
 </head>

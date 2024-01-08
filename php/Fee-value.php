@@ -1,5 +1,14 @@
 <?php
 require('../connection.php');
+
+if ($_SESSION["role"] !== 'admin') {
+    echo '<script>';
+    echo 'alert("คุณไม่มีสิทธิเข้าถึง!");';
+    echo 'window.location.href = "../index.php";';
+    echo '</script>';
+    exit();
+}
+
 if (isset($_POST['fee'])) {
     $fee = $_POST['fee'];
 

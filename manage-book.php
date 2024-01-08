@@ -1,115 +1,47 @@
-<!DOCTYPE html>
-<html lang="en">
-<?php include('header.php'); ?>
+<?php
+include 'header.php';
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="canonical" href="https://getbootstrap.com/docs/5.0/examples/sidebars/">
-    <title></title>
-</head>
+session_start();
+if (!isset($_SESSION["username"])) {
+    echo '<script>';
+    echo 'alert("คุณยังไม่ได้เข้าสู่ระบบ");';
+    echo 'window.location.href = "login.php";';
+    echo '</script>';
+    exit();
+} else {
+    if ($_SESSION["role"] !== 'librarian') {
+        echo '<script>';
+        echo 'alert("คุณไม่มีสิทธิเข้าถึง!");';
+        echo 'window.location.href = "index.php";';
+        echo '</script>';
+        exit();
+    }
+}
 
-<body style="background-color:#2F5597; 
-    background-image: url('img/bg.jpg'); ">
-    <div class="bg-primary">
-        <div
-            class="container d-flex flex-wrap justify-content-center py-3  mx-auto border-bottom text-white bg-primary px-3">
-            <a class="d-flex align-items-center  mb-md-0 me-md-auto link-body-emphasis text-decoration-none">
-                <span class="fs-4 text-white m-1 text-shadow">
-                    ระบบบรรณารักษณ์
-                </span></a>
-            <div class="rounded d-flex align-items-center mb-md-0 mx-1 link-body-emphasis text-decoration-none">
-                <?php
-                session_start();
-                if (!isset($_SESSION["username"])) {
-                    echo '<script>';
-                    echo 'alert("คุณยังไม่ได้เข้าสู่ระบบ");';
-                    echo 'window.location.href = "login.php";';
-                    echo '</script>';
-                    exit();
-                } else {
-                    if ($_SESSION["role"] !== 'librarian') {
-                        echo '<script>';
-                        echo 'alert("คุณไม่มีสิทธิเข้าถึง!");';
-                        echo 'window.location.href = "index.php";';
-                        echo '</script>';
-                        exit();
-                    }
-                }
-                if (isset($_SESSION['user_fname']) && $_SESSION['user_lname']) {
-                    $nowuser_fname = $_SESSION["user_fname"];
-                    $nowuser_lname = $_SESSION["user_lname"];
-                    echo "
-                    <span class='fs-5 bg-warning rounded p-1 px-3' style='font-size: 16px;'>
-                    <svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='currentColor'
-                        class='bi bi-person-circle' viewBox='0 0 16 16'
-                        style='width: 1em; height: 1em; vertical-align: -0.125em;'>
-                        <path d='M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0'></path>
-                        <path fill-rule='evenodd'
-                            d='M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1'>
-                        </path>
-                    </svg>
-                    <span style='font-size: 1em;'> ยินดีต้อนรับ : $nowuser_fname $nowuser_lname</span>
-                </span>";
-                }
-                ?>
-            </div>
 
-        </div>
-    </div>
-    <div class="navbar bg-dark">
-        <div class="container">
-            <div class="btn-group btn-group-toggle mx-auto">
-                <div class="col-auto">
-                    <a class="btn btn-success  rounded-0 px-4 border-dark " href="librarian_main.php">หน้าแรก</a>
-                </div>
-                <div class="col-auto">
-                    <a class="btn btn-warning  rounded-0 px-4 border-dark"
-                        href="librarian-users.php">แก้ไขบัญชีผู้ใช้</a>
-                </div>
+?>
 
-                <div class="col-auto">
-                    <a class="btn btn-warning  rounded-0 px-4 border-dark disabled"
-                        href="lb-book.php">หนังสือทั้งหมด</a>
-                </div>
+<?php
+require('connection.php');
 
-                <div class="col-auto">
-                    <a class="btn btn-warning  rounded-0 px-4 border-dark" href="borrowing.php">ยืมหนังสือ</a>
-                </div>
-                <div class="col-auto">
-                    <a class="btn btn-warning  rounded-0 px-4 border-dark" href="returning.php">คืนหนังสือ</a>
-                </div>
-                <div class="col-auto">
-                    <a class="btn btn-warning  rounded-0 px-4 border-dark"
-                        href="borrowhistory.php">ข้อมูลการยืมหนังสือ</a>
-                </div>
-                <div class="col-auto">
-                    <a href="logout.php" class="btn btn-danger border-dark rounded-0 px-4 ">ออกจากระบบ</a>
-                </div>
-            </div>
-        </div>
-    </div>
-    <?php
-    require('connection.php');
+$searchQuery = isset($_GET['search_query']) ? $_GET['search_query'] : '';
+$limit = 10;
+$currentPage = isset($_GET['page']) ? $_GET['page'] : 1;
+$offset = ($currentPage - 1) * $limit;
 
-    $searchQuery = isset($_GET['search_query']) ? $_GET['search_query'] : '';
-    $limit = 10;
-    $currentPage = isset($_GET['page']) ? $_GET['page'] : 1;
-    $offset = ($currentPage - 1) * $limit;
-
-    if (!empty($searchQuery)) {
-        $search = '%' . $searchQuery . '%';
-        $stmt = $conn->prepare("SELECT COUNT(*) as count 
+if (!empty($searchQuery)) {
+    $search = '%' . $searchQuery . '%';
+    $stmt = $conn->prepare("SELECT COUNT(*) as count 
                             FROM books 
                             WHERE (book_id LIKE :search_query 
                             OR book_name LIKE :search_query 
                             OR author LIKE :search_query 
                             OR type_id LIKE :search_query)");
-        $stmt->bindValue(':search_query', $search, PDO::PARAM_STR);
-        $stmt->execute();
-        $totalRows = $stmt->fetch(PDO::FETCH_ASSOC)['count'];
+    $stmt->bindValue(':search_query', $search, PDO::PARAM_STR);
+    $stmt->execute();
+    $totalRows = $stmt->fetch(PDO::FETCH_ASSOC)['count'];
 
-        $stmt = $conn->prepare("SELECT *
+    $stmt = $conn->prepare("SELECT *
                             FROM books 
                             WHERE (book_id LIKE :search_query 
                             OR book_name LIKE :search_query 
@@ -119,25 +51,28 @@
                             ) 
                             ORDER BY book_id DESC 
                             LIMIT :limit OFFSET :offset");
-        $stmt->bindValue(':search_query', $search, PDO::PARAM_STR);
-    } else {
-        $countStmt = $conn->prepare("SELECT COUNT(*) as count FROM books");
-        $countStmt->execute();
-        $totalRows = $countStmt->fetch(PDO::FETCH_ASSOC)['count'];
+    $stmt->bindValue(':search_query', $search, PDO::PARAM_STR);
+} else {
+    $countStmt = $conn->prepare("SELECT COUNT(*) as count FROM books");
+    $countStmt->execute();
+    $totalRows = $countStmt->fetch(PDO::FETCH_ASSOC)['count'];
 
-        $stmt = $conn->prepare("SELECT *
+    $stmt = $conn->prepare("SELECT *
                             FROM books  
                             ORDER BY book_id DESC 
                             LIMIT :limit OFFSET :offset");
-    }
+}
 
-    $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
-    $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
-    $stmt->execute();
-    $booksData = $stmt->fetchAll(PDO::FETCH_ASSOC);
+$stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
+$stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
+$stmt->execute();
+$booksData = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    $totalPages = ceil($totalRows / $limit);
-    ?>
+$totalPages = ceil($totalRows / $limit);
+?>
+
+<body style="background-color:#2F5597; 
+    background-image: url('img/bg.jpg'); ">
     <div class="flex-container">
         <div class="container ">
             <div class="my-3 bg-body  shadow ">
@@ -177,17 +112,7 @@
                         </div>
                 </div>
 
-                <div class="container text-center bg-warning">
-                    <div class="btn-group btn-group-toggle mx-auto">
-                        <div class="col-auto">
-                            <a class="btn btn-warning  rounded-0 px-4 border-dark" href="add-book.php">เพิ่มหนังสือ</a>
-                        </div>
-                        <div class="col-auto">
-                            <a class="btn btn-warning  rounded-0 px-4 border-dark"
-                                href="manage-book.php">จัดการหนังสือ</a>
-                        </div>
-                    </div>
-                </div>
+
                 </form>
                 <p class="fs-5 rounded p-1 px-3 m-0 form-control border-0 text-center">
                     พบข้อมูลหนังสือ
@@ -199,13 +124,13 @@
                         <thead>
                             <tr class="text-center text-light bg-dark col-10">
                                 <th class='col-1'>รหัสหนังสือ</th>
-                                <th class='col-3'>ชื่อหนังสือ</th>
+                                <th class='col-2'>ชื่อหนังสือ</th>
                                 <th class='col-2'>ประเภทหนังสือ</th>
                                 <th class='col-2'>ผู้แต่ง</th>
                                 <th class='col-1'>สำนักพิมพ์</th>
                                 </th>
                                 <th class='col-1'>จำนวนนหนังสือ</th>
-                                <th class='col-1'>สถานะ</th>
+                                <th class='col-1'>จัดการ</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -241,23 +166,13 @@
                                     <td>
                                         <?php echo $row['bookvalue']; ?>
                                     </td>
-                                    <td class=" <?php
-                                    if ($row['borrowstatus'] == $row['bookvalue']) {
-                                        echo 'bg-danger text-white';
-                                    } elseif ($row['borrowstatus'] > 0) {
-                                        echo 'bg-warning text-dark';
-                                    } else {
-                                        echo 'bg-success text-white';
-                                    }
-                                    ?>">
-                                        <?php
-                                        if ($row['borrowstatus'] > 0) {
-                                            echo 'ว่าง ' . $row['bookvalue'] - $row['borrowstatus'] . ' เล่ม';
-                                        } else {
-                                            echo 'ว่าง';
-                                        }
-                                        ?>
+                                    <td>
+                                        <div class="btn-group  ">
+                                            <a class="btn btn-sm btn-warning rounded-0 px-4"
+                                                href="book-edit.php?id=<?php echo $row['book_id']; ?>">แก้ไข
+                                            </a>
 
+                                        </div>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>
@@ -295,17 +210,19 @@
                         </nav>
                     </div>
                 </div>
+
+
+
+
+                <a href="lb-book.php" class="btn btn-lg btn-danger rounded-0 px-3 mr-3 col-12"
+                    style="font-size: 1em;">กลับ
+                </a>
+
             </div>
 
         </div>
     </div>
+
     </div>
 
-
-
-
-
-    <?php include('script.php'); ?>
 </body>
-
-</html>

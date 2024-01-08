@@ -2,14 +2,6 @@
 <html lang="en">
 <?php include('header.php'); ?>
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="canonical" href="https://getbootstrap.com/docs/5.0/examples/sidebars/">
-    <title>Document</title>
-
-</head>
-
 <body style="background-image: url('img/bg.jpg'); background-position: center; background-size: cover; ">
     <div class="bg-primary">
         <div
@@ -180,62 +172,62 @@
                     <div class="col mx-3">
                         <div class="table-responsive">
                             <?php if ($totalusers > 0): ?>
-                                    <table class="table table-bordered table-sm m-0">
-                                        <thead>
-                                            <tr class="text-center text-light bg-dark col-10">
-                                                <th class='col-2'>รหัสผู้ใช้</th>
-                                                <th class='col-2'>ชื่อบัญชี</th>
-                                                <th class='col-2'>ชื่อจริง</th>
-                                                <th class='col-2'>นามสกุล</th>
-                                                <th class='col-2'>สถานะ</th>
-                                                <th class='col-2'>จัดการ/สถานะ</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <?php foreach ($usersData as $row): ?>
-                                                    <tr class="text-center">
-                                                        <td>
-                                                            <?php echo $row['user_id']; ?>
-                                                        </td>
-                                                        <td class='text-center'>
-                                                            <?php echo $row['username']; ?>
-                                                        </td>
-                                                        <td>
-                                                            <?php echo $row['user_fname']; ?>
-                                                        </td>
-                                                        <td class='text-center'>
-                                                            <?php echo $row['user_lname']; ?>
-                                                        </td>
-                                                        <td class="text-center">
-                                                            <?php
-                                                            if ($row['role'] == 'student') {
-                                                                echo 'นักเรียน';
-                                                            } elseif ($row['role'] == 'admin') {
-                                                                echo 'ผู้ดูแลระบบ';
-                                                            } elseif ($row['role'] == 'librarian') {
-                                                                echo 'บรรณารักษณ์';
-                                                            }
-                                                            ?>
-                                                        </td>
+                                <table class="table table-bordered table-sm m-0">
+                                    <thead>
+                                        <tr class="text-center text-light bg-dark col-10">
+                                            <th class='col-2'>รหัสผู้ใช้</th>
+                                            <th class='col-2'>ชื่อบัญชี</th>
+                                            <th class='col-2'>ชื่อจริง</th>
+                                            <th class='col-2'>นามสกุล</th>
+                                            <th class='col-2'>สถานะ</th>
+                                            <th class='col-2'>จัดการ/สถานะ</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php foreach ($usersData as $row): ?>
+                                            <tr class="text-center">
+                                                <td>
+                                                    <?php echo $row['user_id']; ?>
+                                                </td>
+                                                <td class='text-center'>
+                                                    <?php echo $row['username']; ?>
+                                                </td>
+                                                <td>
+                                                    <?php echo $row['user_fname']; ?>
+                                                </td>
+                                                <td class='text-center'>
+                                                    <?php echo $row['user_lname']; ?>
+                                                </td>
+                                                <td class="text-center">
+                                                    <?php
+                                                    if ($row['role'] == 'student') {
+                                                        echo 'นักเรียน';
+                                                    } elseif ($row['role'] == 'admin') {
+                                                        echo 'ผู้ดูแลระบบ';
+                                                    } elseif ($row['role'] == 'librarian') {
+                                                        echo 'บรรณารักษณ์';
+                                                    }
+                                                    ?>
+                                                </td>
 
-                                                        <td class="text-center">
-                                                            <div class="btn-group  ">
+                                                <td class="text-center">
+                                                    <div class="btn-group  ">
 
-                                                                <a href="admin-users.php?id=<?php echo $row['user_id']; ?>"
-                                                                    class="btn btn-warning">แก้ไขข้อมูล</a>
+                                                        <a href="admin-users.php?id=<?php echo $row['user_id']; ?>"
+                                                            class="btn btn-warning">แก้ไขข้อมูล</a>
 
-                                                            </div>
-                                                        </td>
-
-                                                    </tr>
-                                                    <div class="modal fade" id="my-modal<?php echo $row['workplace_id']; ?>"
-                                                        tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                                     </div>
-                                            <?php endforeach; ?>
-                                        </tbody>
-                                    </table>
+                                                </td>
+
+                                            </tr>
+                                            <div class="modal fade" id="my-modal<?php echo $row['workplace_id']; ?>"
+                                                tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                            </div>
+                                        <?php endforeach; ?>
+                                    </tbody>
+                                </table>
                             <?php else: ?>
-                                    <p class='mt-5'>No data available</p>
+                                <p class='mt-5'>No data available</p>
                             <?php endif; ?>
                         </div>
                     </div>
@@ -243,29 +235,29 @@
                         <nav aria-label=" Page navigation example  ">
                             <ul class="pagination justify-content-center m-0">
                                 <?php if ($currentPage > 1): ?>
-                                        <li class="page-item">
-                                            <a class="page-link bg-dark text-white"
-                                                href="?page=<?php echo ($currentPage - 1); ?>" aria-label="Previous">
-                                                <span aria-hidden="true">
-                                                    &#60;
-                                                </span>
-                                            </a>
-                                        </li>
+                                    <li class="page-item">
+                                        <a class="page-link bg-dark text-white"
+                                            href="?page=<?php echo ($currentPage - 1); ?>" aria-label="Previous">
+                                            <span aria-hidden="true">
+                                                &#60;
+                                            </span>
+                                        </a>
+                                    </li>
                                 <?php endif; ?>
                                 <?php for ($i = 1; $i <= $totalPages; $i++): ?>
-                                        <li class="page-item <?php echo ($i == $currentPage) ? 'active' : ''; ?>">
-                                            <a class="page-link  " href="?page=<?php echo $i; ?>">
-                                                <?php echo $i; ?>
-                                            </a>
-                                        </li>
+                                    <li class="page-item <?php echo ($i == $currentPage) ? 'active' : ''; ?>">
+                                        <a class="page-link  " href="?page=<?php echo $i; ?>">
+                                            <?php echo $i; ?>
+                                        </a>
+                                    </li>
                                 <?php endfor; ?>
                                 <?php if ($currentPage < $totalPages): ?>
-                                        <li class="page-item">
-                                            <a class="page-link bg-dark text-white"
-                                                href="?page=<?php echo ($currentPage + 1); ?>" aria-label="Next">
-                                                <span aria-hidden="true"> &#62;</span>
-                                            </a>
-                                        </li>
+                                    <li class="page-item">
+                                        <a class="page-link bg-dark text-white"
+                                            href="?page=<?php echo ($currentPage + 1); ?>" aria-label="Next">
+                                            <span aria-hidden="true"> &#62;</span>
+                                        </a>
+                                    </li>
                                 <?php endif; ?>
                             </ul>
                         </nav>

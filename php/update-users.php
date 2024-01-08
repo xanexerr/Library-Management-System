@@ -43,8 +43,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
 
     } else {
-        // Handle errors
-        echo "เกิดข้อผิดพลาด : " . $stmt->error;
+        echo "<script>
+                alert('มีข้อผิดพลาดในการแก้ไขข้อมูล:! " . $stmt->error;
+        "');
+                window.location.href = '../manage-book.php';
+                </script>";
     }
 
 } else {

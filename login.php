@@ -8,7 +8,9 @@ require('connection.php');
 ?>
 
 
-<body style="background-color:#2F5597">
+<body style="background-color:#2F5597; background-color:#2F5597; 
+    background-image: url('img/bg.jpg'); 
+     ">
     <div class=" container d-flex justify-content-center align-items-center  p-5">
         <div class="g-0 border rounded overflow-hidden flex-md-row my-4  shadow-sm h-md-250 position-relative"
             style="background-color:#FFFFFF">

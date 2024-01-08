@@ -7,6 +7,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="canonical" href="https://getbootstrap.com/docs/5.0/examples/sidebars/">
     <title>Document</title>
+    <style>
+        .btn-custom-width {
+            width: 100%;
+            max-width: 200px;
+            /* สามารถปรับความกว้างตามที่ต้องการได้ */
+        }
+    </style>
 </head>
 
 <body style="background-color:#2F5597; 
@@ -51,32 +58,44 @@
         echo 'window.location.href = "login.php";';
         echo '</script>';
         exit();
+    } else {
+        if ($_SESSION["role"] !== 'librarian') {
+            echo '<script>';
+            echo 'alert("คุณไม่มีสิทธิเข้าถึง!");';
+            echo 'window.location.href = "index.php";';
+            echo '</script>';
+            exit();
+        }
     }
     ?>
     <div class="navbar bg-dark">
         <div class="container">
-            <div class="row align-items-center">
+            <div class="btn-group btn-group-toggle mx-auto">
                 <div class="col-auto">
-                    <a class="btn btn-warning" href="librarian-users.php">แก้ไขบัญชีผู้ใช้</a>
+                    <a class="btn btn-success  rounded-0 px-4 border-dark disabled"
+                        href="librarian_main.php">หน้าแรก</a>
+                </div>
+                <div class="col-auto">
+                    <a class="btn btn-warning  rounded-0 px-4 border-dark"
+                        href="librarian-users.php">แก้ไขบัญชีผู้ใช้</a>
                 </div>
 
                 <div class="col-auto">
-                    <a class="btn btn-warning" href="lb-book.php">หนังสือทั้งหมด</a>
+                    <a class="btn btn-warning  rounded-0 px-4 border-dark" href="lb-book.php">หนังสือทั้งหมด</a>
+                </div>
+
+                <div class="col-auto">
+                    <a class="btn btn-warning  rounded-0 px-4 border-dark" href="borrowing.php">ยืมหนังสือ</a>
                 </div>
                 <div class="col-auto">
-                    <a class="btn btn-warning" href="add-book.php">เพิ่มหนังสือ</a>
+                    <a class="btn btn-warning  rounded-0 px-4 border-dark" href="returning.php">คืนหนังสือ</a>
                 </div>
                 <div class="col-auto">
-                    <a class="btn btn-warning" href="borrowing.php">ยืมหนังสือ</a>
+                    <a class="btn btn-warning  rounded-0 px-4 border-dark"
+                        href="borrowhistory.php">ข้อมูลการยืมหนังสือ</a>
                 </div>
                 <div class="col-auto">
-                    <a class="btn btn-warning" href="returning.php">คืนหนังสือ</a>
-                </div>
-                <div class="col-auto">
-                    <a class="btn btn-warning" href="borrowhistory.php">ข้อมูลการยืมหนังสือ</a>
-                </div>
-                <div class="col-auto">
-                    <a href="logout.php" class="btn btn-danger">ออกจากระบบ</a>
+                    <a href="logout.php" class="btn btn-danger border-dark rounded-0 px-4 ">ออกจากระบบ</a>
                 </div>
             </div>
         </div>
@@ -115,28 +134,61 @@
     ?>
     <div class="flex-container ">
         <div class="container  ">
-            <div class="my-3 bg-body  shadow bg-dark">
+            <div class="my-3   bg-none ">
                 <div class=" justify-content-center ">
-                    <label>จำนวนหนังสือทั้งหมด </label>
-                    <?php echo $totalBooks ?><br>
 
-                    <label>จำนวนสมาชิกทั้งหมด</label>
-                    <?php echo $totalStudents; ?><br>
+                    <div class="container p-4 col-10 ">
+                        <div class="row ">
+                            <div class="col-md-6 mb-4">
+                                <div class="card text-white bg-primary">
+                                    <div class="card-body my-4 ">
+                                        <h5 class="card-title text-center">จำนวนหนังสือทั้งหมด</h5>
+                                        <p class="card-text fs-1 text-center">
+                                            <?php echo $totalBooks; ?> เล่ม
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-4">
+                                <div class="card text-white bg-success">
+                                    <div class="card-body my-4">
+                                        <h5 class="card-title text-center">จำนวนสมาชิกทั้งหมด</h5>
+                                        <p class="card-text fs-1 text-center">
+                                            <?php echo $totalStudents; ?> คน
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-4 ">
+                                <div class="card text-white bg-danger">
+                                    <div class="card-body my-4">
+                                        <h5 class="card-title text-center">จำนวนการยืมหนังสือทั้งหมด</h5>
+                                        <p class="card-text fs-1 text-center">
+                                            <?php echo $notReturned; ?> เล่ม
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-4 ">
+                                <div class="card text-white bg-secondary">
+                                    <div class="card-body my-4">
+                                        <h5 class="card-title text-center">ค่าชดเชยคืนหนังสือล่าช้า</h5>
+                                        <p class="card-text fs-1 text-center">
+                                            <?php echo $Fee; ?> บาท/วัน
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 
-                    <label>จำนวนการยืมหนังสือทั้งหมด</label>
-                    <?php echo $notReturned; ?><br>
 
-                    <label>ค่าธรรมเนียมยืมหนังสือเลยเวลา </label>
-                    <?php echo $Fee; ?> บาทต่อวัน<br>
                 </div>
             </div>
-        </div>
-    </div>
-    </div>
 
 
 
-    <?php include('script.php'); ?>
+            <?php include('script.php'); ?>
 </body>
 
 </html>
