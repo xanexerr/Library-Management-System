@@ -20,7 +20,7 @@ include("header.php")
         echo '</script>';
         exit();
     } else {
-        if ($_SESSION["role"] !== 'admin' or $_SESSION["role"] !== 'librarian') {
+        if ($_SESSION["role"] !== 'admin') {
             echo '<script>';
             echo 'alert("คุณไม่มีสิทธิเข้าถึง!");';
             echo 'window.location.href = "index.php";';
@@ -84,6 +84,8 @@ include("header.php")
 
                             <button type="submit" value="submit"
                                 class="mt-3 btn btn-success w-100">บันทึกการเปลี่ยนแปลง</button>
+                            <a href="#" onclick="confirmDelete(<?php echo $row['user_id']; ?>)"
+                                class="mt-1 btn btn-warning w-100">ลบบัญชี</a>
                             <a href="admin-main.php" class="mt-1 btn btn-danger w-100">ยกเลิก</a>
                         </form>
 
@@ -102,3 +104,24 @@ include("header.php")
 </body>
 
 </html>
+
+<script>
+    // เลือก input element โดยใช้ ID
+    const bookValueInput = document.getElementById('bookvalue');
+
+
+    bookValueInput.addEventListener('change', function () {
+
+        if (this.value < 1) {
+            alert('ใส่จำนวนหนังสือให้ถูกต้อง');
+            this.value = 1;
+        }
+    });
+
+    function confirmDelete(bookId) {
+        if (confirm("คุณแน่ใจหรือไม่ว่าต้องการลบบัญชีนี้?")) {
+            window.location.href = `php/del-book.php?id=${bookId}`;
+        } else {
+        }
+    }
+</script>

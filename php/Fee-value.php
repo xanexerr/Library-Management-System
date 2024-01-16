@@ -1,5 +1,6 @@
 <?php
 require('../connection.php');
+session_start();
 
 if ($_SESSION["role"] !== 'admin') {
     echo '<script>';

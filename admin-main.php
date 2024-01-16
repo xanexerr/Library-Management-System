@@ -55,17 +55,21 @@
 
     <div class="navbar bg-dark">
         <div class="container">
-            <div class="row align-items-center">
+            <div class="btn-group btn-group-toggle mx-auto">
                 <div class="col-auto">
-                    <a class="btn btn-warning disabled" href="admin-main.php">แก้ไขบัญชีผู้ใช้</a>
+                    <a class="btn btn-warning  rounded-0 px-4 border-dark  disabled"
+                        href="admin-main.php">แก้ไขบัญชีผู้ใช้</a>
                 </div>
                 <div class="col-auto">
-                    <a href="Fee.php" class="btn btn-warning">ปรับค่าบทลงโทษ</a>
+                    <a class="btn btn-warning  rounded-0 px-4 border-dark" href="Fee.php">ปรับค่าบทลงโทษ</a>
                 </div>
+
                 <div class="col-auto">
-                    <a href="logout.php" class="btn btn-danger">ออกจากระบบ</a>
+                    <a class="btn btn-danger  rounded-0 px-4 border-dark " href="logout.php">ออกจากระบบ</a>
                 </div>
             </div>
+
+
         </div>
     </div>
 
@@ -75,8 +79,8 @@
     $totalusers = $stmt->fetchColumn();
     $usersData = $conn->query("SELECT * FROM users")->fetchAll(PDO::FETCH_ASSOC);
     ?>
-    <?php
 
+    <?php
     $limit = 12;
     $stmt = $conn->prepare("SELECT COUNT(*) FROM users");
     $stmt->execute();
@@ -100,26 +104,25 @@
     if (isset($_GET['search_query'])) {
         $search = '%' . $_GET['search_query'] . '%';
         $search_query = $_GET['search_query'];
-        $stmt = $conn->prepare("SELECT * FROM users WHERE 
-        user_id LIKE :search_query 
+        $stmt = $conn->prepare("SELECT * FROM users 
+        WHERE user_id LIKE :search_query 
         OR username LIKE :search_query 
         OR user_fname LIKE :search_query 
-        OR user_lname  LIKE :search_query 
-        OR role  LIKE :search_query 
-        ORDER BY user_id DESC LIMIT :limit OFFSET :offset");
+        OR user_lname LIKE :search_query 
+        OR role LIKE :search_query 
+        $order
+        LIMIT :limit OFFSET :offset");
         $stmt->bindValue(':search_query', $search, PDO::PARAM_STR);
     } else {
-        $stmt = $conn->prepare("SELECT * FROM users ORDER BY user_id DESC LIMIT :limit OFFSET :offset");
+        $stmt = $conn->prepare("SELECT * FROM users $order LIMIT :limit OFFSET :offset");
     }
 
     $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
     $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
     $stmt->execute();
     $usersData = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-
-
     ?>
+
     <div class="flex-container">
         <div class="container ">
             <div class="my-3 bg-body  shadow ">
@@ -159,6 +162,15 @@
                             </div>
                     </div>
                     </form>
+
+                    <div class="container text-center bg-warning">
+                        <div class="btn-group  btn-group-toggle mx-auto">
+                            <div class="col-auto">
+                                <a class="btn btn-warning  rounded-0 px-4 border-dark"
+                                    href="add-member.php">เพิ่มบัญชีใหม่</a>
+                            </div>
+                        </div>
+                    </div>
 
                     <div class="px-4">
                         <div class="">

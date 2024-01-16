@@ -75,7 +75,7 @@
                 <div class="col-auto">
                     <a class="btn btn-warning  rounded-0 px-4 border-dark" href="lb-book.php">หนังสือทั้งหมด</a>
                 </div>
-                
+
                 <div class="col-auto">
                     <a class="btn btn-warning  rounded-0 px-4 border-dark" href="borrowing.php">ยืมหนังสือ</a>
                 </div>
@@ -164,10 +164,11 @@
                     <p class='fs-4 p-2 text-center bg-dark text-white m-0 '>
                         ข้อมูลผู้ใช้ทั้งหมด </p>
                     <form class="m-0 rounded-top   col-12" method="GET">
-                        <div class="input-group container bg-secondary px-4 p-2 py-3 mx-auto col-10">
-                            <div class="col-2 ">
-                                <select class=" form-control  rounded-0 " name="work_type_filter"
-                                    onchange="this.form.submit()">
+                        <div
+                            class="input-group container bg-secondary px-4 p-2 py-3 mx-auto col-10 row justify-content-md-center ">
+                            <div class="form-group col-md-2 p-0">
+                                <select class=" form-control rounded-0 ml-3 col-2 bg-primary text-white"
+                                    name="work_type_filter" onchange="this.form.submit()">
                                     <option value="DESC" <?php if (isset($_GET['work_type_filter']) && $_GET['work_type_filter'] === 'DESC')
                                         echo 'selected'; ?>>ลำดับ : มาก -> น้อย
                                     </option>
@@ -194,6 +195,14 @@
                         </div>
                 </div>
                 </form>
+
+                <div class="container text-center bg-warning">
+                    <div class="btn-group  btn-group-toggle mx-auto">
+                        <div class="col-auto">
+                            <a class="btn btn-warning  rounded-0 px-4 border-dark" href="add-member.php">สมาชิกใหม่</a>
+                        </div>
+                    </div>
+                </div>
 
                 <div class="px-4">
                     <div class="">

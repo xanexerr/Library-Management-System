@@ -20,25 +20,28 @@ if (!isset($_SESSION["username"])) {
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Fetch data from the form
-    $book_name = $_POST['book_name'];
-    $author = $_POST['author'];
-    $publisher = $_POST['publisher'];
-    $book_type = $_POST['book_type'];
+    $user_fname = $_POST['book_name'];
+    $user_lname = $_POST['author'];
+    $username = $_POST['publisher'];
+    $user_type = $_POST['book_type'];
     $bookvalue = $_POST['bookvalue'];
 
     // Prepare the SQL statement with placeholders
     $stmt = $conn->prepare("INSERT INTO books (book_name, author, publisher, type_id, bookvalue) VALUES (?, ?, ?, ?, ?)");
 
     // Bind parameters to the statement
-    $stmt->bindParam(1, $book_name);
-    $stmt->bindParam(2, $author);
-    $stmt->bindParam(3, $publisher);
-    $stmt->bindParam(4, $book_type);
+    $stmt->bindParam(1, $user_fname);
+    $stmt->bindParam(2, $user_lname);
+    $stmt->bindParam(3, $username);
+    $stmt->bindParam(4, $user_type);
     $stmt->bindParam(5, $bookvalue);
 
     // Execute the prepared statement
     if ($stmt->execute()) {
-        echo "บันทึกข้อมูลหนังสือเรียบร้อยแล้ว!";
+        echo '<script>';
+        echo 'alert("เพิ่มหนังสือสำเร็จ!");';
+        echo "window.location.href = '../lb-book.php';";
+        echo '</script>';
     } else {
         echo "มีข้อผิดพลาดในการเพิ่มข้อมูล: " . $stmt->errorInfo()[2];
     }

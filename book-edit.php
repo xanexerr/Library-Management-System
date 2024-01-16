@@ -123,12 +123,8 @@ $book_id = $_GET['id'];
 
     function confirmDelete(bookId) {
         if (confirm("คุณแน่ใจหรือไม่ว่าต้องการลบหนังสือนี้?")) {
-            // If confirmed, redirect to the delete URL
             window.location.href = `php/del-book.php?id=${bookId}`;
         } else {
-            // If canceled, do nothing or handle accordingly
-            // For instance, you can prevent the default behavior of the link:
-            // event.preventDefault();
         }
     }
 </script>

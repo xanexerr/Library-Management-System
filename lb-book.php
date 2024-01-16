@@ -96,39 +96,113 @@
     $limit = 10;
     $currentPage = isset($_GET['page']) ? $_GET['page'] : 1;
     $offset = ($currentPage - 1) * $limit;
+    if (isset($_GET['book_type']) && !empty($_GET['book_type'])) {
+        $user_type = $_GET['book_type'];
 
-    if (!empty($searchQuery)) {
-        $search = '%' . $searchQuery . '%';
-        $stmt = $conn->prepare("SELECT COUNT(*) as count 
-                            FROM books 
-                            WHERE (book_id LIKE :search_query 
-                            OR book_name LIKE :search_query 
-                            OR author LIKE :search_query 
-                            OR type_id LIKE :search_query)");
-        $stmt->bindValue(':search_query', $search, PDO::PARAM_STR);
-        $stmt->execute();
-        $totalRows = $stmt->fetch(PDO::FETCH_ASSOC)['count'];
+        if (!empty($searchQuery)) {
+            $search = '%' . $searchQuery . '%';
 
-        $stmt = $conn->prepare("SELECT *
-                            FROM books 
-                            WHERE (book_id LIKE :search_query 
-                            OR book_name LIKE :search_query 
-                            OR author LIKE :search_query 
-                            OR type_id LIKE :search_query
-                            OR publisher LIKE :search_query
-                            ) 
-                            ORDER BY book_id DESC 
-                            LIMIT :limit OFFSET :offset");
-        $stmt->bindValue(':search_query', $search, PDO::PARAM_STR);
+            // Count total rows based on search criteria
+            $stmt = $conn->prepare("SELECT COUNT(*) as count 
+            FROM books 
+            LEFT JOIN book_types ON books.type_id = book_types.type_id 
+            WHERE (books.book_id LIKE :search_query 
+                OR books.book_name LIKE :search_query 
+                OR books.author LIKE :search_query 
+                OR books.publisher LIKE :search_query)
+                AND books.type_id = :book_type");
+
+            $stmt->bindValue(':search_query', $search, PDO::PARAM_STR);
+            $stmt->bindValue(':book_type', $user_type, PDO::PARAM_INT);
+            $stmt->execute();
+            $totalRows = $stmt->fetch(PDO::FETCH_ASSOC)['count'];
+
+            // Retrieve book data
+            $stmt = $conn->prepare("SELECT books.*, book_types.type_name 
+            FROM books 
+            LEFT JOIN book_types ON books.type_id = book_types.type_id 
+            WHERE (books.book_id LIKE :search_query 
+                OR books.book_name LIKE :search_query 
+                OR books.author LIKE :search_query 
+                OR books.publisher LIKE :search_query)
+                AND books.type_id = :book_type
+            ORDER BY books.book_id DESC 
+            LIMIT :limit OFFSET :offset");
+
+            $stmt->bindValue(':search_query', $search, PDO::PARAM_STR);
+            $stmt->bindValue(':book_type', $user_type, PDO::PARAM_INT);
+            $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
+            $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
+            $stmt->execute();
+
+            $booksData = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } else {
+            $countStmt = $conn->prepare("SELECT COUNT(*) as count FROM books WHERE type_id = :book_type");
+            $countStmt->bindValue(':book_type', $user_type, PDO::PARAM_INT);
+            $countStmt->execute();
+            $totalRows = $countStmt->fetch(PDO::FETCH_ASSOC)['count'];
+
+            $stmt = $conn->prepare("SELECT *
+        FROM books  
+        WHERE type_id = :book_type
+        ORDER BY book_id DESC 
+        LIMIT :limit OFFSET :offset");
+
+            $stmt->bindValue(':book_type', $user_type, PDO::PARAM_INT);
+            $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
+            $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
+            $stmt->execute();
+
+            $booksData = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        }
     } else {
-        $countStmt = $conn->prepare("SELECT COUNT(*) as count FROM books");
-        $countStmt->execute();
-        $totalRows = $countStmt->fetch(PDO::FETCH_ASSOC)['count'];
+        if (!empty($searchQuery)) {
+            $search = '%' . $searchQuery . '%';
+            // Count total rows based on search criteria
+            $stmt = $conn->prepare("SELECT COUNT(*) as count 
+                        FROM books 
+                        LEFT JOIN book_types ON books.type_id = book_types.type_id 
+                        WHERE (books.book_id LIKE :search_query 
+                            OR books.book_name LIKE :search_query 
+                            OR books.author LIKE :search_query 
+                            OR book_types.type_name LIKE :search_query
+                            OR books.publisher LIKE :search_query
+                            )");
+            $stmt->bindValue(':search_query', $search, PDO::PARAM_STR);
+            $stmt->execute();
+            $totalRows = $stmt->fetch(PDO::FETCH_ASSOC)['count'];
 
-        $stmt = $conn->prepare("SELECT *
+            // Retrieve book data
+            $stmt = $conn->prepare("SELECT books.*, book_types.type_name 
+                        FROM books 
+                        LEFT JOIN book_types ON books.type_id = book_types.type_id 
+                        WHERE (books.book_id LIKE :search_query 
+                            OR books.book_name LIKE :search_query 
+                            OR books.author LIKE :search_query 
+                            OR book_types.type_name LIKE :search_query
+                            OR books.publisher LIKE :search_query
+                            ) 
+                        ORDER BY books.book_id DESC 
+                        LIMIT :limit OFFSET :offset");
+
+            $stmt->bindValue(':search_query', $search, PDO::PARAM_STR);
+            $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
+            $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
+            $stmt->execute();
+
+            $booksData = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+
+        } else {
+            $countStmt = $conn->prepare("SELECT COUNT(*) as count FROM books");
+            $countStmt->execute();
+            $totalRows = $countStmt->fetch(PDO::FETCH_ASSOC)['count'];
+
+            $stmt = $conn->prepare("SELECT *
                             FROM books  
                             ORDER BY book_id DESC 
                             LIMIT :limit OFFSET :offset");
+        }
     }
 
     $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
@@ -137,6 +211,13 @@
     $booksData = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     $totalPages = ceil($totalRows / $limit);
+
+    $stmt = $conn->prepare("SELECT COUNT(*) FROM book_types ");
+    $stmt->execute();
+
+    $stmt = $conn->prepare("SELECT * FROM book_types ");
+    $stmt->execute();
+    $typeData = $stmt->fetchAll(PDO::FETCH_ASSOC);
     ?>
     <div class="flex-container">
         <div class="container ">
@@ -155,150 +236,170 @@
 
                         </p>
                     </div>
-                    <form class="m-0 rounded-top  rounded-0 col-12 " method="GET">
-                        <div class="input-group container bg-secondary px-4 p-2 py-3 mx-auto col-10 ">
+                    <form class="m-0 rounded-top  rounded-0 col-md-12 " method="GET">
+                        <div
+                            class="input-group container bg-secondary px-4 p-2 py-3 mx-auto col-10 row justify-content-md-center ">
+                            <div class="form-group col-md-2 p-0">
+                                <select class=" form-control rounded-0 ml-3 col-2 bg-primary text-white "
+                                    name="book_type" id="book_type" onchange="this.form.submit()">
+                                    <option value="">ทั้งหมด</option>
+                                    <?php foreach ($typeData as $type): ?>
+                                        <option value="<?php echo $type['type_id']; ?>" <?php if (isset($_GET['book_type']) && !empty($_GET['book_type']) && $type['type_id'] == $user_type) {
+                                               echo "selected";
+                                           } ?>>
+                                            <?php echo $type['type_name']; ?>
+                                        </option>
 
+                                        <?php echo $type['type_name']; ?>
+                                        </option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
 
-                            <input type="text" class="form-control rounded-0 ml-3" placeholder="ค้นหา...."
-                                name="search_query" value="<?php if (isset($searchQuery)) {
-                                    echo $searchQuery;
-                                }
-                                ?>">
+                            <div class="form-group col-md-8 p-0">
+                                <input type="text" class=" rounded-0  ml-3  form-control" placeholder="ค้นหา...."
+                                    name="search_query" value="<?php if (isset($searchQuery)) {
+                                        echo $searchQuery;
+                                    }
+                                    ?>">
+                            </div>
 
-                            <button class="btn btn-primary rounded-0 px-3 mr-3 col-2" type="submit"
+                            <button class="btn btn-primary rounded-0 px-3 mr-3 col-md-2" type="submit"
                                 style="font-size: 1em;">
 
                                 <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor"
                                     class="bi bi-search" viewBox="0 0 16 16" style="vertical-align: middle;">
                                     <path
                                         d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0" />
-                                </svg> ค้นหาหนังสือ
+                                </svg> ค้นหา
                             </button>
                         </div>
-                </div>
+                    </form>
 
-                <div class="container text-center bg-warning">
-                    <div class="btn-group btn-group-toggle mx-auto">
-                        <div class="col-auto">
-                            <a class="btn btn-warning  rounded-0 px-4 border-dark" href="add-book.php">เพิ่มหนังสือ</a>
-                        </div>
-                        <div class="col-auto">
-                            <a class="btn btn-warning  rounded-0 px-4 border-dark"
-                                href="manage-book.php">จัดการหนังสือ</a>
+                    <div class="container text-center bg-warning">
+                        <div class="btn-group btn-group-toggle mx-auto">
+                            <div class="col-auto">
+                                <a class="btn btn-warning  rounded-0 px-4 border-dark"
+                                    href="add-book.php">เพิ่มหนังสือ</a>
+                            </div>
+                            <div class="col-auto">
+                                <a class="btn btn-warning  rounded-0 px-4 border-dark"
+                                    href="manage-book.php">จัดการหนังสือ</a>
+                            </div>
                         </div>
                     </div>
-                </div>
-                </form>
-                <p class="fs-5 rounded p-1 px-3 m-0 form-control border-0 text-center">
-                    พบข้อมูลหนังสือ
-                    <?php echo $totalRows ?> เล่ม
-                </p>
-                <div class="table-responsive px-3">
 
-                    <table class="table table-bordered table-sm m-0 ">
-                        <thead>
-                            <tr class="text-center text-light bg-dark col-10">
-                                <th class='col-1'>รหัสหนังสือ</th>
-                                <th class='col-3'>ชื่อหนังสือ</th>
-                                <th class='col-2'>ประเภทหนังสือ</th>
-                                <th class='col-2'>ผู้แต่ง</th>
-                                <th class='col-1'>สำนักพิมพ์</th>
-                                </th>
-                                <th class='col-1'>จำนวนนหนังสือ</th>
-                                <th class='col-1'>สถานะ</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php foreach ($booksData as $row): ?>
-                                <tr class="text-center">
-                                    <td>
-                                        <?php echo $row['book_id']; ?>
-                                    </td>
-                                    <td>
-                                        <?php echo $row['book_name']; ?>
-                                    </td>
-                                    <td>
-                                        <?php
-                                        $type_id = $row['type_id'];
-                                        $typeStmt = $conn->prepare("SELECT type_name FROM book_types WHERE type_id = :type_id");
-                                        $typeStmt->bindParam(':type_id', $type_id, PDO::PARAM_INT);
-                                        $typeStmt->execute();
-                                        $typeRow = $typeStmt->fetch(PDO::FETCH_ASSOC);
-                                        if ($typeRow) {
-                                            echo $typeRow['type_name'];
-                                        } else {
+                    </form>
+                    <p class="fs-5 rounded p-1 px-3 m-0 form-control border-0 text-center">
+                        พบข้อมูลหนังสือ
+                        <?php echo $totalRows ?> เล่ม
+                    </p>
+                    <div class="table-responsive px-3">
 
-                                        }
-                                        ?>
-                                    </td>
-
-                                    <td>
-                                        <?php echo $row['author']; ?>
-                                    </td>
-                                    <td>
-                                        <?php echo $row['publisher']; ?>
-                                    </td>
-                                    <td>
-                                        <?php echo $row['bookvalue']; ?>
-                                    </td>
-                                    <td class=" <?php
-                                    if ($row['borrowstatus'] == $row['bookvalue']) {
-                                        echo 'bg-danger text-white';
-                                    } elseif ($row['borrowstatus'] > 0) {
-                                        echo 'bg-warning text-dark';
-                                    } else {
-                                        echo 'bg-success text-white';
-                                    }
-                                    ?>">
-                                        <?php
-                                        if ($row['borrowstatus'] > 0) {
-                                            echo 'ว่าง ' . $row['bookvalue'] - $row['borrowstatus'] . ' เล่ม';
-                                        } else {
-                                            echo 'ว่าง';
-                                        }
-                                        ?>
-
-                                    </td>
+                        <table class="table table-bordered table-sm m-0 ">
+                            <thead>
+                                <tr class="text-center text-light bg-dark col-10">
+                                    <th class='col-1'>รหัสหนังสือ</th>
+                                    <th class='col-3'>ชื่อหนังสือ</th>
+                                    <th class='col-2'>ประเภทหนังสือ</th>
+                                    <th class='col-2'>ผู้แต่ง</th>
+                                    <th class='col-1'>สำนักพิมพ์</th>
+                                    </th>
+                                    <th class='col-1'>จำนวนนหนังสือ</th>
+                                    <th class='col-1'>สถานะ</th>
                                 </tr>
-                            <?php endforeach; ?>
-                        </tbody>
-                    </table>
-                    <div class="container p-3 ">
-                        <nav aria-label=" Page navigation example  ">
-                            <ul class="pagination justify-content-center m-0">
-                                <?php if ($currentPage > 1): ?>
-                                    <li class="page-item">
-                                        <a class="page-link bg-dark text-white"
-                                            href="?page=<?php echo ($currentPage - 1); ?>" aria-label="Previous">
-                                            <span aria-hidden="true">
-                                                &#60;
-                                            </span>
-                                        </a>
-                                    </li>
-                                <?php endif; ?>
-                                <?php for ($i = 1; $i <= $totalPages; $i++): ?>
-                                    <li class="page-item <?php echo ($i == $currentPage) ? 'active' : ''; ?>">
-                                        <a class="page-link  " href="?page=<?php echo $i; ?>">
-                                            <?php echo $i; ?>
-                                        </a>
-                                    </li>
-                                <?php endfor; ?>
-                                <?php if ($currentPage < $totalPages): ?>
-                                    <li class="page-item">
-                                        <a class="page-link bg-dark text-white"
-                                            href="?page=<?php echo ($currentPage + 1); ?>" aria-label="Next">
-                                            <span aria-hidden="true"> &#62;</span>
-                                        </a>
-                                    </li>
-                                <?php endif; ?>
-                            </ul>
-                        </nav>
+                            </thead>
+                            <tbody>
+                                <?php foreach ($booksData as $row): ?>
+                                    <tr class="text-center">
+                                        <td>
+                                            <?php echo $row['book_id']; ?>
+                                        </td>
+                                        <td>
+                                            <?php echo $row['book_name']; ?>
+                                        </td>
+                                        <td>
+                                            <?php
+                                            $type_id = $row['type_id'];
+                                            $typeStmt = $conn->prepare("SELECT type_name FROM book_types WHERE type_id = :type_id");
+                                            $typeStmt->bindParam(':type_id', $type_id, PDO::PARAM_INT);
+                                            $typeStmt->execute();
+                                            $typeRow = $typeStmt->fetch(PDO::FETCH_ASSOC);
+                                            if ($typeRow) {
+                                                echo $typeRow['type_name'];
+                                            } else {
+
+                                            }
+                                            ?>
+                                        </td>
+
+                                        <td>
+                                            <?php echo $row['author']; ?>
+                                        </td>
+                                        <td>
+                                            <?php echo $row['publisher']; ?>
+                                        </td>
+                                        <td>
+                                            <?php echo $row['bookvalue']; ?>
+                                        </td>
+                                        <td class=" <?php
+                                        if ($row['borrowstatus'] == $row['bookvalue']) {
+                                            echo 'bg-danger text-white';
+                                        } elseif ($row['borrowstatus'] > 0) {
+                                            echo 'bg-warning text-dark';
+                                        } else {
+                                            echo 'bg-success text-white';
+                                        }
+                                        ?>">
+                                            <?php
+                                            if ($row['borrowstatus'] > 0) {
+                                                echo 'ว่าง ' . $row['bookvalue'] - $row['borrowstatus'] . ' เล่ม';
+                                            } else {
+                                                echo 'ว่าง';
+                                            }
+                                            ?>
+
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            </tbody>
+                        </table>
+                        <div class="container p-3 ">
+                            <nav aria-label=" Page navigation example  ">
+                                <ul class="pagination justify-content-center m-0">
+                                    <?php if ($currentPage > 1): ?>
+                                        <li class="page-item">
+                                            <a class="page-link bg-dark text-white"
+                                                href="?page=<?php echo ($currentPage - 1); ?>" aria-label="Previous">
+                                                <span aria-hidden="true">
+                                                    &#60;
+                                                </span>
+                                            </a>
+                                        </li>
+                                    <?php endif; ?>
+                                    <?php for ($i = 1; $i <= $totalPages; $i++): ?>
+                                        <li class="page-item <?php echo ($i == $currentPage) ? 'active' : ''; ?>">
+                                            <a class="page-link  " href="?page=<?php echo $i; ?>">
+                                                <?php echo $i; ?>
+                                            </a>
+                                        </li>
+                                    <?php endfor; ?>
+                                    <?php if ($currentPage < $totalPages): ?>
+                                        <li class="page-item">
+                                            <a class="page-link bg-dark text-white"
+                                                href="?page=<?php echo ($currentPage + 1); ?>" aria-label="Next">
+                                                <span aria-hidden="true"> &#62;</span>
+                                            </a>
+                                        </li>
+                                    <?php endif; ?>
+                                </ul>
+                            </nav>
+                        </div>
                     </div>
                 </div>
-            </div>
 
+            </div>
         </div>
-    </div>
     </div>
 
 

@@ -25,7 +25,11 @@ if (!$result || $result->num_rows === 0) {
     } elseif ($objResult["role"] == "librarian") {
         header("location: ../librarian_main.php");
     } else {
-        header("location: ../student_main.php");
+        echo '<script>';
+        echo 'alert("คุณไม่มีสิทธิเข้าถึง!");';
+        echo 'window.location.href = "../logout.php";';
+        echo '</script>';
+        exit();
     }
 }
 $connection->close();

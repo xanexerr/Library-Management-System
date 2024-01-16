@@ -142,9 +142,10 @@
                             <div class="col-md-6 mb-4">
                                 <div class="card text-white bg-primary">
                                     <div class="card-body my-4 ">
-                                        <h5 class="card-title text-center">จำนวนหนังสือทั้งหมด</h5>
-                                        <p class="card-text fs-1 text-center">
-                                            <?php echo $totalBooks; ?> เล่ม
+                                        <h4 class="card-title text-center">จำนวนหนังสือทั้งหมด</h4>
+                                        <p class="card-text fs-1 text-center"><strong>
+                                                <?php echo $totalBooks; ?> เล่ม
+                                            </strong>
                                         </p>
                                     </div>
                                 </div>
@@ -152,9 +153,10 @@
                             <div class="col-md-6 mb-4">
                                 <div class="card text-white bg-success">
                                     <div class="card-body my-4">
-                                        <h5 class="card-title text-center">จำนวนสมาชิกทั้งหมด</h5>
-                                        <p class="card-text fs-1 text-center">
-                                            <?php echo $totalStudents; ?> คน
+                                        <h4 class="card-title text-center">จำนวนสมาชิกทั้งหมด</h4>
+                                        <p class="card-text fs-1 text-center"><strong>
+                                                <?php echo $totalStudents; ?> คน
+                                            </strong>
                                         </p>
                                     </div>
                                 </div>
@@ -162,9 +164,10 @@
                             <div class="col-md-6 mb-4 ">
                                 <div class="card text-white bg-danger">
                                     <div class="card-body my-4">
-                                        <h5 class="card-title text-center">จำนวนการยืมหนังสือทั้งหมด</h5>
-                                        <p class="card-text fs-1 text-center">
-                                            <?php echo $notReturned; ?> เล่ม
+                                        <h4 class="card-title text-center">จำนวนการยืมหนังสือทั้งหมด</h4>
+                                        <p class="card-text fs-1 text-center"><strong>
+                                                <?php echo $notReturned; ?> เล่ม
+                                            </strong>
                                         </p>
                                     </div>
                                 </div>
@@ -172,9 +175,10 @@
                             <div class="col-md-6 mb-4 ">
                                 <div class="card text-white bg-secondary">
                                     <div class="card-body my-4">
-                                        <h5 class="card-title text-center">ค่าชดเชยคืนหนังสือล่าช้า</h5>
-                                        <p class="card-text fs-1 text-center">
-                                            <?php echo $Fee; ?> บาท/วัน
+                                        <h4 class="card-title text-center">ค่าชดเชยคืนหนังสือล่าช้า</h4>
+                                        <p class="card-text fs-1 text-center"><strong>
+                                                <?php echo $Fee; ?> บาท/วัน
+                                            </strong>
                                         </p>
                                     </div>
                                 </div>

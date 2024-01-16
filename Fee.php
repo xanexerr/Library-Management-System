@@ -5,11 +5,28 @@
 <?php
 include("header.php");
 require('connection.php');
+
+session_start();
+require('connection.php');
+if (!isset($_SESSION["username"])) {
+    echo '<script>';
+    echo 'alert("คุณยังไม่ได้เข้าสู่ระบบ");';
+    echo 'window.location.href = "login.php";';
+    echo '</script>';
+    exit();
+} else {
+    if ($_SESSION["role"] !== 'admin') {
+        echo '<script>';
+        echo 'alert("คุณไม่มีสิทธิเข้าถึง!");';
+        echo 'window.location.href = "index.php";';
+        echo '</script>';
+        exit();
+    }
+}
 ?>
 
 
-<body
-    style="background-color:#2F5597; background-image: url('img/bg.jpg'); background-position: center; background-size: cover; ">
+<body style="background-color:#2F5597; background-image: url('img/bg.jpg'); background-position: center; weight:100vh;">
     <div class=" container d-flex justify-content-center align-items-center  p-5">
         <div class="g-0 border rounded overflow-hidden flex-md-row my-4  shadow-sm h-md-250 position-relative"
             style="background-color:#FFFFFF">
