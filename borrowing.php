@@ -8,8 +8,11 @@ include("header.php")
     ?>
 <!-- body -->
 
-<body
-    style="background-color:#2F5597; background-image: url('img/bg.jpg'); background-position: center; background-size:auto; ">
+<body style="
+            background-color: #2F5597;
+            background-image: url('img/bg.jpg');
+            background-size: 100%;
+            ">
     <div class="bg-primary">
         <div
             class="container d-flex flex-wrap justify-content-center py-3  mx-auto border-bottom text-white bg-primary px-3">
@@ -32,7 +35,7 @@ include("header.php")
                             d='M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1'>
                         </path>
                     </svg>
-                    <span style='font-size: 1em;'>$nowuser_fname $nowuser_lname</span>
+                    <span style='font-size: 1em;'>ยินดีต้อนรับ : $nowuser_fname $nowuser_lname</span>
                 </span>";
                 }
                 ?>
@@ -112,8 +115,8 @@ include("header.php")
 
     <!-- Use $typeData and $bookData (or $bookDetails) in your HTML -->
 
-    <div class="container  bg-white shadow border p-0 col-8 my-2 rounded ">
-        <p class='h4 py-2  bg-dark border text-white  mb-0 text-center  rounded-top'>ระบบยืมหนังสือ</p>
+    <div class="container  bg-white shadow  p-0 col-8 my-3 ">
+        <p class='h4 py-2  bg-dark text-white  mb-0 text-center '>ระบบยืมหนังสือ</p>
         <div class="">
             <form class="container align-content-center p-4 pb-0" method='GET' id="booksearch">
                 <div class="form-group">

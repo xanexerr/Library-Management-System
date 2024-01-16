@@ -4,8 +4,7 @@
 
 <body style="background-image: url('img/bg.jpg'); background-position: center; background-size: cover; ">
     <div class="bg-primary">
-        <div
-            class="container d-flex flex-wrap justify-content-center py-3  mx-auto border-bottom text-white bg-primary px-3">
+        <div class="container d-flex flex-wrap justify-content-center py-3  mx-auto  text-white bg-primary px-3">
             <a class="d-flex align-items-center  mb-md-0 me-md-auto link-body-emphasis text-decoration-none">
                 <span class="fs-4 text-white m-1 text-shadow">
                     ผู้ดูแลระบบ
@@ -30,7 +29,6 @@
                 }
                 ?>
             </div>
-
         </div>
     </div>
     <?php
@@ -53,10 +51,10 @@
 
     ?>
 
-    <div class="navbar bg-dark">
+    <div class="navbar bg-dark ">
         <div class="container">
-            <div class="btn-group btn-group-toggle mx-auto">
-                <div class="col-auto">
+            <div class="btn-group btn-group-toggle mx-auto ">
+                <div class="col-auto ">
                     <a class="btn btn-warning  rounded-0 px-4 border-dark  disabled"
                         href="admin-main.php">แก้ไขบัญชีผู้ใช้</a>
                 </div>
@@ -126,9 +124,9 @@
     <div class="flex-container">
         <div class="container ">
             <div class="my-3 bg-body  shadow ">
-                <div class=" justify-content-center rounded  ">
-                    <div class="border p-0 ">
-                        <p class='h4 py-2 px-auto bg-dark border text-white mb-0 text-center '>
+                <div class=" justify-content-center  ">
+                    <div class="p-0 ">
+                        <p class='h4 py-2 px-auto bg-dark  text-white mb-0 text-center '>
                             ข้อมูลผู้ใช้ทั้งหมด </p>
 
                         <form class="m-0 rounded-top  rounded col-12" method="GET">

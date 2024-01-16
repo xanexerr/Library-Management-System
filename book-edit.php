@@ -122,9 +122,20 @@ $book_id = $_GET['id'];
     });
 
     function confirmDelete(bookId) {
-        if (confirm("คุณแน่ใจหรือไม่ว่าต้องการลบหนังสือนี้?")) {
-            window.location.href = `php/del-book.php?id=${bookId}`;
-        } else {
-        }
+        Swal.fire({
+            title: 'คุณแน่ใจหรือไม่?',
+            text: 'การลบบัญชีนี้ไม่สามารถย้อนกลับได้!',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'ใช่, ลบทันที!',
+            cancelButtonText: 'ยกเลิก'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = `php/del-book.php?id=${bookId}`;
+            }
+        });
     }
+</script>
 </script>

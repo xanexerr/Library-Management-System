@@ -84,8 +84,8 @@ include("header.php")
 
                             <button type="submit" value="submit"
                                 class="mt-3 btn btn-success w-100">บันทึกการเปลี่ยนแปลง</button>
-                            <a href="php/del-member.php?id=<?php echo $row['user_id']; ?>"
-                                class=" mt-1 btn-danger btn w-100">ลบบัญชี</a>
+                            <a href="#" class="mt-1 btn-danger btn w-100"
+                                onclick="confirmDelete(<?php echo $row['user_id']; ?>)">ลบบัญชี</a>
                             <a href="admin-main.php" class="mt-1 btn  btn-warning w-100">ยกเลิก</a>
                         </form>
 
@@ -106,11 +106,21 @@ include("header.php")
 </html>
 
 <script>
-
-    function confirmDelete(bookId) {
-        if (confirm("คุณแน่ใจหรือไม่ว่าต้องการลบบัญชีนี้?")) {
-            window.location.href = `php/del-book.php?id=${bookId}`;
-        } else {
-        }
+    function confirmDelete(userId) {
+        Swal.fire({
+            title: 'คุณแน่ใจหรือไม่?',
+            text: 'การลบบัญชีนี้ไม่สามารถย้อนกลับได้!',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'ใช่, ลบทันที!',
+            cancelButtonText: 'ยกเลิก'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Redirect to delete script with user_id
+                window.location.href = 'php/del-member.php?id=' + userId;
+            }
+        });
     }
 </script>

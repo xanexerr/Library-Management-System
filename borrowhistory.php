@@ -9,9 +9,11 @@
     <title>Document</title>
 </head>
 
-<body style="background-color:#2F5597; 
-    background-image: url('img/bg.jpg'); 
-     ">
+<body style="
+            background-color: #2F5597;
+            background-image: url('img/bg.jpg');
+            background-size: 100%;
+            ">
     <div class="bg-primary">
         <div
             class="container d-flex flex-wrap justify-content-center py-3  mx-auto border-bottom text-white bg-primary px-3">

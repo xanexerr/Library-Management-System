@@ -7,18 +7,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="canonical" href="https://getbootstrap.com/docs/5.0/examples/sidebars/">
     <title>Document</title>
-    <style>
-        .btn-custom-width {
-            width: 100%;
-            max-width: 200px;
-            /* สามารถปรับความกว้างตามที่ต้องการได้ */
-        }
-    </style>
 </head>
 
-<body style="background-color:#2F5597; 
-    background-image: url('img/bg.jpg'); 
-     ">
+<body style="
+            background-color: #2F5597;
+            background-image: url('img/bg.jpg');
+            background-size: 100%;
+            ">
     <div class="bg-primary">
         <div
             class="container d-flex flex-wrap justify-content-center py-3  mx-auto border-bottom text-white bg-primary px-3">
@@ -175,7 +170,7 @@
                             <div class="col-md-6 mb-4 ">
                                 <div class="card text-white bg-secondary">
                                     <div class="card-body my-4">
-                                        <h4 class="card-title text-center">ค่าชดเชยคืนหนังสือล่าช้า</h4>
+                                        <h4 class="card-title text-center">ค่าธรรมเนียมคืนหนังสือเลยกำหนด</h4>
                                         <p class="card-text fs-1 text-center"><strong>
                                                 <?php echo $Fee; ?> บาท/วัน
                                             </strong>

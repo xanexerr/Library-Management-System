@@ -9,9 +9,11 @@
     <title>Document</title>
 </head>
 
-<body style="background-color:#2F5597; 
-    background-image: url('img/bg.jpg'); 
-     ">
+<body style="
+            background-color: #2F5597;
+            background-image: url('img/bg.jpg');
+            background-size: 100%;
+            ">
     <div class="bg-primary">
         <div
             class="container d-flex flex-wrap justify-content-center py-3  mx-auto border-bottom text-white bg-primary px-3">
@@ -167,7 +169,7 @@
                         <div
                             class="input-group container bg-secondary px-4 p-2 py-3 mx-auto col-10 row justify-content-md-center ">
                             <div class="form-group col-md-2 p-0">
-                                <select class=" form-control rounded-0 ml-3 col-2 bg-primary text-white"
+                                <select class=" form-control rounded-0 ml-3 col-2 border-primary  bg-primary text-white"
                                     name="work_type_filter" onchange="this.form.submit()">
                                     <option value="DESC" <?php if (isset($_GET['work_type_filter']) && $_GET['work_type_filter'] === 'DESC')
                                         echo 'selected'; ?>>ลำดับ : มาก -> น้อย

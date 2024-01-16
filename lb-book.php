@@ -6,11 +6,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="canonical" href="https://getbootstrap.com/docs/5.0/examples/sidebars/">
-    <title></title>
+
 </head>
 
-<body style="background-color:#2F5597; 
-    background-image: url('img/bg.jpg'); ">
+<body style="
+            background-color: #2F5597;
+            background-image: url('img/bg.jpg');
+            background-size: 100%;
+            ">
     <div class="bg-primary">
         <div
             class="container d-flex flex-wrap justify-content-center py-3  mx-auto border-bottom text-white bg-primary px-3">
@@ -23,15 +26,14 @@
                 session_start();
                 if (!isset($_SESSION["username"])) {
                     echo '<script>';
-                    echo 'alert("คุณยังไม่ได้เข้าสู่ระบบ");';
-                    echo 'window.location.href = "login.php";';
+                    echo 'Swal.fire("คุณยังไม่ได้เข้าสู่ระบบ", { icon: "warning" }).then(() => { window.location.href = "login.php"; });';
                     echo '</script>';
                     exit();
                 } else {
+                    // Check for the appropriate role or any other necessary conditions
                     if ($_SESSION["role"] !== 'librarian') {
                         echo '<script>';
-                        echo 'alert("คุณไม่มีสิทธิเข้าถึง!");';
-                        echo 'window.location.href = "index.php";';
+                        echo 'Swal.fire("คุณไม่มีสิทธิเข้าถึง!", { icon: "error" }).then(() => { window.location.href = "index.php"; });';
                         echo '</script>';
                         exit();
                     }
@@ -243,8 +245,9 @@
                         <div
                             class="input-group container bg-secondary px-4 p-2 py-3 mx-auto col-10 row justify-content-md-center ">
                             <div class="form-group col-md-2 p-0">
-                                <select class=" form-control rounded-0 ml-3 col-2 bg-primary text-white "
-                                    name="book_type" id="book_type" onchange="this.form.submit()">
+                                <select class=" form-control rounded-0 ml-3 col-2 bg-primary text-white border-primary"
+                                    name="
+                                    name=" book_type" id="book_type" onchange="this.form.submit()">
                                     <option value="">ทั้งหมด</option>
                                     <?php foreach ($typeData as $type): ?>
                                         <option value="<?php echo $type['type_id']; ?>" <?php if (isset($_GET['book_type']) && !empty($_GET['book_type']) && $type['type_id'] == $user_type) {
