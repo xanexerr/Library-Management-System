@@ -84,9 +84,9 @@ include("header.php")
 
                             <button type="submit" value="submit"
                                 class="mt-3 btn btn-success w-100">บันทึกการเปลี่ยนแปลง</button>
-                            <a href="#" onclick="confirmDelete(<?php echo $row['user_id']; ?>)"
-                                class="mt-1 btn btn-warning w-100">ลบบัญชี</a>
-                            <a href="admin-main.php" class="mt-1 btn btn-danger w-100">ยกเลิก</a>
+                            <a href="php/del-member.php?id=<?php echo $row['user_id']; ?>"
+                                class=" mt-1 btn-danger btn w-100">ลบบัญชี</a>
+                            <a href="admin-main.php" class="mt-1 btn  btn-warning w-100">ยกเลิก</a>
                         </form>
 
                     <?php endforeach; ?>
@@ -106,17 +106,6 @@ include("header.php")
 </html>
 
 <script>
-    // เลือก input element โดยใช้ ID
-    const bookValueInput = document.getElementById('bookvalue');
-
-
-    bookValueInput.addEventListener('change', function () {
-
-        if (this.value < 1) {
-            alert('ใส่จำนวนหนังสือให้ถูกต้อง');
-            this.value = 1;
-        }
-    });
 
     function confirmDelete(bookId) {
         if (confirm("คุณแน่ใจหรือไม่ว่าต้องการลบบัญชีนี้?")) {

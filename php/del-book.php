@@ -20,13 +20,17 @@ if (!isset($_SESSION["username"])) {
 
 $book_id = $_GET['id'];
 
-// Prepare the SQL statement
-$stmt = $conn->prepare("DELETE FROM books WHERE book_id = ?");
+$stmtBorrow = $conn->prepare("DELETE FROM borrow WHERE book_id = ?");
+$stmtBorrow->bindParam(1, $book_id);
 
-// Bind parameters to the statement
+if (!$stmtBorrow->execute()) {
+    echo "Error deleting borrow records: " . $stmtBorrow->errorInfo()[2];
+    exit();
+}
+
+$stmt = $conn->prepare("DELETE FROM books WHERE book_id = ?");
 $stmt->bindParam(1, $book_id);
 
-// Execute the prepared statement
 if ($stmt->execute()) {
     echo "<script>
                 alert('ลบข้อมูลหนังสือสำเร็จ!');

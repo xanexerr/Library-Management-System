@@ -76,7 +76,9 @@ include("header.php")
 
                             <button type="submit" value="submit"
                                 class="mt-3 btn btn-success w-100">บันทึกการเปลี่ยนแปลง</button>
-                            <a href="librarian-users.php" class="mt-1 btn btn-danger w-100">ยกเลิก</a>
+                            <a href="php/del-member.php?id=<?php echo $row['user_id']; ?>"
+                                class="mt-1 btn btn-danger w-100">ลบ</a>
+                            <a href="librarian-users.php" class="mt-1 btn btn-warning w-100">ยกเลิก</a>
                         </form>
 
                     <?php endforeach; ?>

@@ -8,37 +8,37 @@ if (!isset($_SESSION["username"])) {
     echo 'window.location.href = "login.php";';
     echo '</script>';
     exit();
-} else {
-    if ($_SESSION["role"] !== 'librarian') {
-        echo '<script>';
-        echo 'alert("คุณไม่มีสิทธิเข้าถึง!");';
-        echo 'window.location.href = "index.php";';
-        echo '</script>';
-        exit();
-    }
+} else if ($_SESSION["role"] !== 'librarian' && $_SESSION["role"] !== 'admin') {
+    echo '<script>';
+    echo 'alert("คุณไม่มีสิทธิเข้าถึง!");';
+    echo 'window.location.href = "index.php";';
+    echo '</script>';
+    exit();
 }
 
-$book_id = $_GET['id'];
+$user_id = $_GET['id'];
 
-// Prepare the SQL statement
-$stmt = $conn->prepare("DELETE FROM books WHERE book_id = ?");
+$stmtBorrow = $conn->prepare("DELETE FROM borrow WHERE user_id = ?");
+$stmtBorrow->bindParam(1, $user_id);
+$stmtBorrow->execute();
 
-// Bind parameters to the statement
-$stmt->bindParam(1, $book_id);
 
-// Execute the prepared statement
+$stmt = $conn->prepare("DELETE FROM users WHERE user_id = ?");
+$stmt->bindParam(1, $user_id);
 if ($stmt->execute()) {
-    echo "<script>
-                alert('ลบข้อมูลหนังสือสำเร็จ!');
-                window.location.href = '../manage-book.php';
-                </script>";
-    exit();
+    if ($_SESSION['role'] == 'admin') {
+        echo '<script>';
+        echo 'alert("ลบผู้ใช้สำเร็จ!");';
+        echo "window.location.href = '../admin-main.php';";
+        echo '</script>';
+    } elseif ($_SESSION['role'] == 'librarian') {
+        echo '<script>';
+        echo 'alert("ลบผู้ใช้สำเร็จ!");';
+        echo "window.location.href = '../librarian-users.php';";
+        echo '</script>';
+    }
 } else {
-    echo "<script>
-                alert('มีข้อผิดพลาดในการลบข้อมูล:! " . $stmt->errorInfo()[2];
-    "');
-                window.location.href = '../manage-book.php';
-                </script>";
+    echo "มีข้อผิดพลาดในการเพิ่มข้อมูล: " . $stmt->errorInfo()[2];
 }
 
 // Close the statement and the database connection

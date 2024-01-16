@@ -13,6 +13,12 @@
     <link rel="icon" href="img/appicon.png" type="image/x-icon">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <!-- Include jQuery -->
+
+
+    <!-- Include Select2 CSS and JavaScript -->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" rel="stylesheet" />
+    
 
     <title>ระบบห้องสมุด</title>
 </head>

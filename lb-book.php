@@ -96,21 +96,24 @@
     $limit = 10;
     $currentPage = isset($_GET['page']) ? $_GET['page'] : 1;
     $offset = ($currentPage - 1) * $limit;
+    $queryString = ''; // Initialize the queryString
+    
     if (isset($_GET['book_type']) && !empty($_GET['book_type'])) {
         $user_type = $_GET['book_type'];
 
         if (!empty($searchQuery)) {
+            $queryString .= "&search_query=" . urlencode($searchQuery);
             $search = '%' . $searchQuery . '%';
 
             // Count total rows based on search criteria
             $stmt = $conn->prepare("SELECT COUNT(*) as count 
-            FROM books 
-            LEFT JOIN book_types ON books.type_id = book_types.type_id 
-            WHERE (books.book_id LIKE :search_query 
-                OR books.book_name LIKE :search_query 
-                OR books.author LIKE :search_query 
-                OR books.publisher LIKE :search_query)
-                AND books.type_id = :book_type");
+        FROM books 
+        LEFT JOIN book_types ON books.type_id = book_types.type_id 
+        WHERE (books.book_id LIKE :search_query 
+            OR books.book_name LIKE :search_query 
+            OR books.author LIKE :search_query 
+            OR books.publisher LIKE :search_query)
+            AND books.type_id = :book_type");
 
             $stmt->bindValue(':search_query', $search, PDO::PARAM_STR);
             $stmt->bindValue(':book_type', $user_type, PDO::PARAM_INT);
@@ -119,15 +122,15 @@
 
             // Retrieve book data
             $stmt = $conn->prepare("SELECT books.*, book_types.type_name 
-            FROM books 
-            LEFT JOIN book_types ON books.type_id = book_types.type_id 
-            WHERE (books.book_id LIKE :search_query 
-                OR books.book_name LIKE :search_query 
-                OR books.author LIKE :search_query 
-                OR books.publisher LIKE :search_query)
-                AND books.type_id = :book_type
-            ORDER BY books.book_id DESC 
-            LIMIT :limit OFFSET :offset");
+        FROM books 
+        LEFT JOIN book_types ON books.type_id = book_types.type_id 
+        WHERE (books.book_id LIKE :search_query 
+            OR books.book_name LIKE :search_query 
+            OR books.author LIKE :search_query 
+            OR books.publisher LIKE :search_query)
+            AND books.type_id = :book_type
+        ORDER BY books.book_id DESC 
+        LIMIT :limit OFFSET :offset");
 
             $stmt->bindValue(':search_query', $search, PDO::PARAM_STR);
             $stmt->bindValue(':book_type', $user_type, PDO::PARAM_INT);
@@ -143,10 +146,10 @@
             $totalRows = $countStmt->fetch(PDO::FETCH_ASSOC)['count'];
 
             $stmt = $conn->prepare("SELECT *
-        FROM books  
-        WHERE type_id = :book_type
-        ORDER BY book_id DESC 
-        LIMIT :limit OFFSET :offset");
+    FROM books  
+    WHERE type_id = :book_type
+    ORDER BY book_id DESC 
+    LIMIT :limit OFFSET :offset");
 
             $stmt->bindValue(':book_type', $user_type, PDO::PARAM_INT);
             $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
@@ -157,33 +160,34 @@
         }
     } else {
         if (!empty($searchQuery)) {
+            $queryString .= "&search_query=" . urlencode($searchQuery);
             $search = '%' . $searchQuery . '%';
             // Count total rows based on search criteria
             $stmt = $conn->prepare("SELECT COUNT(*) as count 
-                        FROM books 
-                        LEFT JOIN book_types ON books.type_id = book_types.type_id 
-                        WHERE (books.book_id LIKE :search_query 
-                            OR books.book_name LIKE :search_query 
-                            OR books.author LIKE :search_query 
-                            OR book_types.type_name LIKE :search_query
-                            OR books.publisher LIKE :search_query
-                            )");
+                    FROM books 
+                    LEFT JOIN book_types ON books.type_id = book_types.type_id 
+                    WHERE (books.book_id LIKE :search_query 
+                        OR books.book_name LIKE :search_query 
+                        OR books.author LIKE :search_query 
+                        OR book_types.type_name LIKE :search_query
+                        OR books.publisher LIKE :search_query
+                        )");
             $stmt->bindValue(':search_query', $search, PDO::PARAM_STR);
             $stmt->execute();
             $totalRows = $stmt->fetch(PDO::FETCH_ASSOC)['count'];
 
             // Retrieve book data
             $stmt = $conn->prepare("SELECT books.*, book_types.type_name 
-                        FROM books 
-                        LEFT JOIN book_types ON books.type_id = book_types.type_id 
-                        WHERE (books.book_id LIKE :search_query 
-                            OR books.book_name LIKE :search_query 
-                            OR books.author LIKE :search_query 
-                            OR book_types.type_name LIKE :search_query
-                            OR books.publisher LIKE :search_query
-                            ) 
-                        ORDER BY books.book_id DESC 
-                        LIMIT :limit OFFSET :offset");
+                    FROM books 
+                    LEFT JOIN book_types ON books.type_id = book_types.type_id 
+                    WHERE (books.book_id LIKE :search_query 
+                        OR books.book_name LIKE :search_query 
+                        OR books.author LIKE :search_query 
+                        OR book_types.type_name LIKE :search_query
+                        OR books.publisher LIKE :search_query
+                        ) 
+                    ORDER BY books.book_id DESC 
+                    LIMIT :limit OFFSET :offset");
 
             $stmt->bindValue(':search_query', $search, PDO::PARAM_STR);
             $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
@@ -191,17 +195,15 @@
             $stmt->execute();
 
             $booksData = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-
         } else {
             $countStmt = $conn->prepare("SELECT COUNT(*) as count FROM books");
             $countStmt->execute();
             $totalRows = $countStmt->fetch(PDO::FETCH_ASSOC)['count'];
 
             $stmt = $conn->prepare("SELECT *
-                            FROM books  
-                            ORDER BY book_id DESC 
-                            LIMIT :limit OFFSET :offset");
+                        FROM books  
+                        ORDER BY book_id DESC 
+                        LIMIT :limit OFFSET :offset");
         }
     }
 
@@ -219,6 +221,7 @@
     $stmt->execute();
     $typeData = $stmt->fetchAll(PDO::FETCH_ASSOC);
     ?>
+
     <div class="flex-container">
         <div class="container ">
             <div class="my-3 bg-body  shadow ">
@@ -311,14 +314,14 @@
                             </thead>
                             <tbody>
                                 <?php foreach ($booksData as $row): ?>
-                                    <tr class="text-center">
-                                        <td>
+                                    <tr>
+                                        <td class="text-center">
                                             <?php echo $row['book_id']; ?>
                                         </td>
-                                        <td>
+                                        <td class="text-left">
                                             <?php echo $row['book_name']; ?>
                                         </td>
-                                        <td>
+                                        <td class="text-center">
                                             <?php
                                             $type_id = $row['type_id'];
                                             $typeStmt = $conn->prepare("SELECT type_name FROM book_types WHERE type_id = :type_id");
@@ -333,16 +336,16 @@
                                             ?>
                                         </td>
 
-                                        <td>
+                                        <td class="text-center">
                                             <?php echo $row['author']; ?>
                                         </td>
-                                        <td>
+                                        <td class="text-center">
                                             <?php echo $row['publisher']; ?>
                                         </td>
-                                        <td>
+                                        <td class="text-center">
                                             <?php echo $row['bookvalue']; ?>
                                         </td>
-                                        <td class=" <?php
+                                        <td class="text-center <?php
                                         if ($row['borrowstatus'] == $row['bookvalue']) {
                                             echo 'bg-danger text-white';
                                         } elseif ($row['borrowstatus'] > 0) {
@@ -352,10 +355,12 @@
                                         }
                                         ?>">
                                             <?php
-                                            if ($row['borrowstatus'] > 0) {
-                                                echo 'ว่าง ' . $row['bookvalue'] - $row['borrowstatus'] . ' เล่ม';
+                                            if ($row['borrowstatus'] == $row['bookvalue']) {
+                                                echo 'โดนยืมหมด';
+                                            } else if ($row['borrowstatus'] > 0) {
+                                                echo 'ยืมได้ ' . $row['bookvalue'] - $row['borrowstatus'] . ' เล่ม';
                                             } else {
-                                                echo 'ว่าง';
+                                                echo 'ไม่มีคนยืม';
                                             }
                                             ?>
 
@@ -365,35 +370,39 @@
                             </tbody>
                         </table>
                         <div class="container p-3 ">
-                            <nav aria-label=" Page navigation example  ">
+                            <nav aria-label="Page navigation example">
                                 <ul class="pagination justify-content-center m-0">
                                     <?php if ($currentPage > 1): ?>
                                         <li class="page-item">
                                             <a class="page-link bg-dark text-white"
-                                                href="?page=<?php echo ($currentPage - 1); ?>" aria-label="Previous">
-                                                <span aria-hidden="true">
-                                                    &#60;
-                                                </span>
+                                                href="?page=<?php echo ($currentPage - 1) . $queryString; ?>"
+                                                aria-label="Previous">
+                                                <span aria-hidden="true">&#60;</span>
                                             </a>
                                         </li>
                                     <?php endif; ?>
+
                                     <?php for ($i = 1; $i <= $totalPages; $i++): ?>
                                         <li class="page-item <?php echo ($i == $currentPage) ? 'active' : ''; ?>">
-                                            <a class="page-link  " href="?page=<?php echo $i; ?>">
+                                            <a class="page-link" href="?page=<?php echo $i . $queryString; ?>">
                                                 <?php echo $i; ?>
                                             </a>
                                         </li>
                                     <?php endfor; ?>
+
                                     <?php if ($currentPage < $totalPages): ?>
                                         <li class="page-item">
                                             <a class="page-link bg-dark text-white"
-                                                href="?page=<?php echo ($currentPage + 1); ?>" aria-label="Next">
-                                                <span aria-hidden="true"> &#62;</span>
+                                                href="?page=<?php echo ($currentPage + 1) . $queryString; ?>"
+                                                aria-label="Next">
+                                                <span aria-hidden="true">&#62;</span>
                                             </a>
                                         </li>
                                     <?php endif; ?>
                                 </ul>
                             </nav>
+
+
                         </div>
                     </div>
                 </div>
