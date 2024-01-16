@@ -76,7 +76,7 @@ if (!isset($_SESSION["username"])) {
     </div>
     <div class="container">
         <div class=" d-flex justify-content-center align-items-center  ">
-            <div class=" border rounded-4 overflow-hidden flex-md-row my-4  shadow-sm h-md-250 position-relative"
+            <div class="  rounded-4 overflow-hidden flex-md-row my-4  shadow-sm h-md-250 position-relative"
                 style="background-color:#FFFFFF">
                 <div class="bg-dark m-0 text-white text-center py-4">
                     <p class="h2 m-0">ค่าธรรมเนียมการยืมหนังสือ</p>
