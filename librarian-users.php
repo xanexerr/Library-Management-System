@@ -49,15 +49,13 @@
     require('connection.php');
     if (!isset($_SESSION["username"])) {
         echo '<script>';
-        echo 'alert("คุณยังไม่ได้เข้าสู่ระบบ");';
-        echo 'window.location.href = "login.php";';
+        echo 'Swal.fire("คุณยังไม่ได้เข้าสู่ระบบ", { icon: "warning" }).then(() => { window.location.href = "login.php"; });';
         echo '</script>';
         exit();
     } else {
         if ($_SESSION["role"] !== 'librarian') {
             echo '<script>';
-            echo 'alert("คุณไม่มีสิทธิเข้าถึง!");';
-            echo 'window.location.href = "index.php";';
+            echo 'Swal.fire("คุณไม่มีสิทธิเข้าถึง!", { icon: "error" }).then(() => { window.location.href = "index.php"; });';
             echo '</script>';
             exit();
         }
@@ -94,8 +92,6 @@
             </div>
         </div>
     </div>
-
-
     <?php
     $updatestatus = "SELECT COUNT(*) FROM users WHERE role = 'student'";
     $stmt = $conn->query($updatestatus);
@@ -221,7 +217,6 @@
                             <table class="table table-bordered table-sm m-0">
                                 <thead>
                                     <tr class="text-center text-light bg-dark col-10">
-                                        <th class='col-2'>รหัสผู้ใช้</th>
                                         <th class='col-2'>ชื่อบัญชี</th>
                                         <th class='col-2'>ชื่อจริง</th>
                                         <th class='col-2'>นามสกุล</th>
@@ -232,9 +227,6 @@
                                 <tbody>
                                     <?php foreach ($usersData as $row): ?>
                                         <tr class="text-center">
-                                            <td>
-                                                <?php echo $row['user_id']; ?>
-                                            </td>
                                             <td class='text-center'>
                                                 <?php echo $row['username']; ?>
                                             </td>
@@ -255,16 +247,12 @@
                                                 }
                                                 ?>
                                             </td>
-
                                             <td class="text-center">
                                                 <div class="btn-group  ">
-
                                                     <a href="librarian-user-edit.php?id=<?php echo $row['user_id']; ?>"
                                                         class="btn btn-warning btn-sm px-2">แก้ไขข้อมูล</a>
-
                                                 </div>
                                             </td>
-
                                         </tr>
                                         <div class="modal fade" id="my-modal<?php echo $row['workplace_id']; ?>" tabindex="-1"
                                             aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -309,14 +297,8 @@
                     </nav>
                 </div>
             </div>
-
         </div>
     </div>
-
-
-
-
-
     <?php include('script.php'); ?>
 </body>
 

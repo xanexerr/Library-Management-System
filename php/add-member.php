@@ -67,12 +67,13 @@
                 });
             </script>';
         } else {
-            $stmt = $conn->prepare("INSERT INTO users(user_fname, user_lname, username, role) VALUES (?, ?, ?, ?)");
+            $stmt = $conn->prepare("INSERT INTO users(user_fname, user_lname, username,password ,role) VALUES (?, ?, ?, ?)");
 
             $stmt->bindParam(1, $user_fname);
             $stmt->bindParam(2, $user_lname);
             $stmt->bindParam(3, $username);
-            $stmt->bindParam(4, $user_type);
+            $stmt->bindParam(4, $username);
+            $stmt->bindParam(5, $user_type);
 
             if ($stmt->execute()) {
                 $location = ($_SESSION['role'] == 'admin') ? '../admin-main.php' : '../librarian-users.php';

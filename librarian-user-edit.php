@@ -19,6 +19,20 @@ include("header.php")
             <div class="rounded d-flex align-items-center mb-md-0 mx-1 link-body-emphasis text-decoration-none">
                 <?php
                 session_start();
+                if (!isset($_SESSION["username"])) {
+                    echo '<script>';
+                    echo 'Swal.fire("คุณยังไม่ได้เข้าสู่ระบบ", { icon: "warning" }).then(() => { window.location.href = "login.php"; });';
+                    echo '</script>';
+                    exit();
+                } else {
+                    // Check for the appropriate role or any other necessary conditions
+                    if ($_SESSION["role"] !== 'librarian') {
+                        echo '<script>';
+                        echo 'Swal.fire("คุณไม่มีสิทธิเข้าถึง!", { icon: "error" }).then(() => { window.location.href = "index.php"; });';
+                        echo '</script>';
+                        exit();
+                    }
+                }
                 if (isset($_SESSION['user_fname']) && $_SESSION['user_lname']) {
                     $nowuser_fname = $_SESSION["user_fname"];
                     $nowuser_lname = $_SESSION["user_lname"];

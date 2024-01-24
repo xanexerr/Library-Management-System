@@ -9,7 +9,6 @@ include("header.php")
 
 <body
     style="background-color:#2F5597; background-image: url('img/bg.jpg'); background-position: center; background-size: cover; ">
-
     <?php
     session_start();
     require('connection.php');
@@ -28,7 +27,6 @@ include("header.php")
             exit();
         }
     }
-
     $stmt = $conn->prepare("SELECT COUNT(*) FROM book_types ");
     $stmt->execute();
     $totalRows = $stmt->fetchColumn();
@@ -36,7 +34,6 @@ include("header.php")
     $stmt = $conn->prepare("SELECT * FROM book_types ");
     $stmt->execute();
     $typeData = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
     ?>
     <div class="bg-primary">
         <div
@@ -80,7 +77,6 @@ include("header.php")
                 }
                 ?>
             </div>
-
         </div>
     </div>
     <div class="navbar bg-dark">

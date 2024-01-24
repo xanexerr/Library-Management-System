@@ -10,8 +10,8 @@
 
 <body>
     <?php
-    require_once('../connection.php'); // Ensure the connection is established
-    
+    require_once('../connection.php');
+
     session_start();
     if (!isset($_SESSION["username"])) {
         echo '<script>';
@@ -25,40 +25,32 @@
             echo '</script>';
             exit();
         }
-    }
+        if ($_SERVER["REQUEST_METHOD"] == "POST") {
+            $user_fname = $_POST['book_name'];
+            $user_lname = $_POST['author'];
+            $username = $_POST['publisher'];
+            $user_type = $_POST['book_type'];
+            $bookvalue = $_POST['bookvalue'];
 
-    if ($_SERVER["REQUEST_METHOD"] == "POST") {
-        // Fetch data from the form
-        $user_fname = $_POST['book_name'];
-        $user_lname = $_POST['author'];
-        $username = $_POST['publisher'];
-        $user_type = $_POST['book_type'];
-        $bookvalue = $_POST['bookvalue'];
+            $stmt = $conn->prepare("INSERT INTO books (book_name, author, publisher, type_id, bookvalue) VALUES (?, ?, ?, ?, ?)");
+            $stmt->bindParam(1, $user_fname);
+            $stmt->bindParam(2, $user_lname);
+            $stmt->bindParam(3, $username);
+            $stmt->bindParam(4, $user_type);
+            $stmt->bindParam(5, $bookvalue);
 
-        // Prepare the SQL statement with placeholders
-        $stmt = $conn->prepare("INSERT INTO books (book_name, author, publisher, type_id, bookvalue) VALUES (?, ?, ?, ?, ?)");
-
-        // Bind parameters to the statement
-        $stmt->bindParam(1, $user_fname);
-        $stmt->bindParam(2, $user_lname);
-        $stmt->bindParam(3, $username);
-        $stmt->bindParam(4, $user_type);
-        $stmt->bindParam(5, $bookvalue);
-
-        // Execute the prepared statement
-        if ($stmt->execute()) {
-            echo '<script>';
-            echo 'Swal.fire({ title: "เพิ่มหนังสือสำเร็จ!", icon: "success" }).then(() => { window.location.href = "../lb-book.php"; });';
-            echo '</script>';
-        } else {
-            echo '<script>';
-            echo 'Swal.fire({ title: "มีข้อผิดพลาดในการเพิ่มข้อมูล: ' . $stmt->errorInfo()[2] . '", icon: "error" });';
-            echo '</script>';
+            if ($stmt->execute()) {
+                echo '<script>';
+                echo 'Swal.fire({ title: "เพิ่มหนังสือสำเร็จ!", icon: "success" }).then(() => { window.location.href = "../lb-book.php"; });';
+                echo '</script>';
+            } else {
+                echo '<script>';
+                echo 'Swal.fire({ title: "มีข้อผิดพลาดในการเพิ่มข้อมูล: ' . $stmt->errorInfo()[2] . '", icon: "error" });';
+                echo '</script>';
+            }
+            $stmt = null;
+            $conn = null;
         }
-
-        // Close the statement and the database connection
-        $stmt = null;
-        $conn = null;
     }
     ?>
 

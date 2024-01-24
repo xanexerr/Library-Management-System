@@ -24,16 +24,16 @@ include("header.php")
                     require('connection.php');
                     if (!isset($_SESSION["username"])) {
                         echo '<script>';
-                        echo 'alert("คุณยังไม่ได้เข้าสู่ระบบ");';
-                        echo 'window.location.href = "login.php";';
+                        echo 'Swal.fire("คุณยังไม่ได้เข้าสู่ระบบ", { icon: "warning" }).then(() => { window.location.href = "login.php"; });';
                         echo '</script>';
                         exit();
-                    } else if ($_SESSION["role"] !== 'librarian' && $_SESSION["role"] !== 'admin') {
-                        echo '<script>';
-                        echo 'alert("คุณไม่มีสิทธิเข้าถึง!");';
-                        echo 'window.location.href = "index.php";';
-                        echo '</script>';
-                        exit();
+                    } else {
+                        if ($_SESSION["role"] !== 'librarian' && $_SESSION["role"] !== 'admin') {
+                            echo '<script>';
+                            echo 'Swal.fire("คุณไม่มีสิทธิเข้าถึง!", { icon: "error" }).then(() => { window.location.href = "index.php"; });';
+                            echo '</script>';
+                            exit();
+                        }
                     }
 
                     if (isset($_SESSION['user_fname']) && $_SESSION['user_lname']) {
@@ -116,7 +116,6 @@ include("header.php")
 
     ?>
     <!-- content -->
-
     <div class="container">
 
         <div class="d-flex justify-content-center align-items-center vh-100 ">

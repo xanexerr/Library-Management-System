@@ -121,7 +121,6 @@
 
     $totalPages = ceil($totalRows / $limit);
 
-
     ?>
     <div class="flex-container">
         <div class="container ">
@@ -130,14 +129,6 @@
                     <p class='fs-4 p-2 text-center bg-dark text-white m-0 '>
                         ข้อมูลผู้ใช้ทั้งหมด </p>
 
-                    <div class="container text-center bg-warning">
-                        <div class="btn-group  btn-group-toggle mx-auto">
-                            <div class="col-auto">
-                                <a class="btn btn-warning  rounded-0 px-4 border-dark"
-                                    href="add-member.php">สมาชิกใหม่</a>
-                            </div>
-                        </div>
-                    </div>
 
                     <div class="px-4">
                         <div class="">
@@ -182,8 +173,6 @@
                                                     $stmt = $conn->prepare("SELECT user_fname, user_lname FROM users WHERE user_id = :user_id");
                                                     $stmt->bindParam(':user_id', $user_id, PDO::PARAM_INT);
                                                     $stmt->execute();
-
-                                                    // Check if the query was successful and returned a result
                                                     if ($result = $stmt->fetch(PDO::FETCH_ASSOC)) {
                                                         $fname = $result['user_fname'];
                                                         $lname = $result['user_lname'];

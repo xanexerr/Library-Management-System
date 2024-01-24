@@ -78,23 +78,15 @@ if (!isset($_SESSION["username"])) {
         <div class=" d-flex justify-content-center align-items-center  ">
             <div class="  rounded-4 overflow-hidden flex-md-row my-4  shadow-sm h-md-250 position-relative"
                 style="background-color:#FFFFFF">
-                <div class="bg-dark m-0 text-white text-center py-4">
-                    <p class="h2 m-0">ค่าธรรมเนียมการยืมหนังสือ</p>
+                <div class="bg-dark m-0 text-white text-center py-2">
+                    <p class="h3 m-0">ค่าธรรมเนียมการยืมหนังสือ</p>
                 </div>
 
                 <?php
                 $strSQL = "SELECT feeperday FROM borrow ORDER BY borrow_id DESC LIMIT 1";
                 $result = $connection->query($strSQL);
-
-                // ALTER TABLE `borrow` CHANGE `feeperday` `feeperday` INT(11) NOT NULL DEFAULT '$fee';
-                //update `borrow` SET `feeperday` = '$fee';
-                
-
                 if ($result) {
-                    // Fetch the last row from the result set
                     $row = $result->fetch_assoc();
-
-                    // Check if there's a row fetched
                     if ($row) {
                         $feeperdayValue = $row['feeperday'];
                     } else {
@@ -113,16 +105,12 @@ if (!isset($_SESSION["username"])) {
                             </p>
                             <input type="number" class="form-control" name="fee" id="fee"
                                 value="<?php echo $feeperdayValue; ?>" required max="1000">
-
                         </div>
-
                         <div class=" pt-3">
                             <button type="submit" class="btn btn-lg btn-success form-control">บันทึกค่าปรับ</button>
                             <a href="admin-main.php" class="mt-1 btn btn-lg btn-danger w-100">ยกเลิก</a>
                         </div>
                     </form>
-
-
                 </div>
             </div>
         </div>

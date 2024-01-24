@@ -3,6 +3,9 @@ body {
  background-color: #cccccc;
 }
 
+.white-filter {
+ filter: brightness(0) invert(1);
+}
 /* The Modal (background) */
 .modal {
  display: none; /* Hidden by default */

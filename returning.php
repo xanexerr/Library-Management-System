@@ -131,7 +131,7 @@ include("header.php")
     <!-- content -->
 
     <div class="container  bg-white shadow p-0 col-8 my-3  ">
-        <p class='h4 py-2  bg-dark  text-white  mb-0 text-center  '>ระบบยืมหนังสือ</p>
+        <p class='h4 py-2  bg-dark  text-white  mb-0 text-center  '>ระบบคืนหนังสือ</p>
         <div class="">
 
             <form class="container align-content-center p-4 pb-0" method='GET' action id="usersearch">

@@ -63,8 +63,6 @@
 
             try {
                 $updateBorrowStmt->execute();
-
-                // Update borrowstatus in books table
                 $updateBooksStmt = $conn->prepare("UPDATE books SET borrowstatus = borrowstatus - 1 WHERE book_id = :book_id");
                 $updateBooksStmt->bindParam(':book_id', $book_id, PDO::PARAM_INT);
                 $updateBooksStmt->execute();
@@ -88,7 +86,6 @@
                 $borrow_days = $interval->days;
 
                 $totalfee = ($borrow_days > 7) ? $borrow_days * $borrow['feeperday'] : 0;
-
                 ?>
                 <script>
                     Swal.fire({

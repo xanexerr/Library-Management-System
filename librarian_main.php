@@ -6,7 +6,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="canonical" href="https://getbootstrap.com/docs/5.0/examples/sidebars/">
-    <title>Document</title>
+    <style>
+        .white-filter {
+            filter: brightness(0) invert(1);
+        }
+    </style>
 </head>
 
 <body style="
@@ -49,18 +53,18 @@
     require('connection.php');
     if (!isset($_SESSION["username"])) {
         echo '<script>';
-        echo 'alert("คุณยังไม่ได้เข้าสู่ระบบ");';
-        echo 'window.location.href = "login.php";';
+        echo 'Swal.fire("คุณยังไม่ได้เข้าสู่ระบบ", { icon: "warning" }).then(() => { window.location.href = "login.php"; });';
         echo '</script>';
         exit();
     } else {
+        // Check for the appropriate role or any other necessary conditions
         if ($_SESSION["role"] !== 'librarian') {
             echo '<script>';
-            echo 'alert("คุณไม่มีสิทธิเข้าถึง!");';
-            echo 'window.location.href = "index.php";';
+            echo 'Swal.fire("คุณไม่มีสิทธิเข้าถึง!", { icon: "error" }).then(() => { window.location.href = "index.php"; });';
             echo '</script>';
             exit();
         }
+
     }
     ?>
     <div class="navbar bg-dark">
@@ -116,38 +120,35 @@
     $FeeResult = $conn->query($FeeQuery);
     if ($FeeResult) {
         $Fee = $FeeResult->fetch(PDO::FETCH_ASSOC)['feeperday'];
-        // Now $Fee contains the 'feeperday' value from the first row based on the descending order
     } else {
-        // Handle error if query fails
         echo "Error executing query";
     }
-
-
-    // Display or use the retrieved data as needed
-    
-
     ?>
     <div class="flex-container ">
         <div class="container  ">
             <div class="my-3   bg-none ">
                 <div class=" justify-content-center ">
-
                     <div class="container p-4 col-10 ">
                         <div class="row ">
                             <div class="col-md-6 mb-4">
                                 <div class="card text-white bg-primary">
-                                    <div class="card-body my-4 ">
-                                        <h4 class="card-title text-center">จำนวนหนังสือทั้งหมด</h4>
-                                        <p class="card-text fs-1 text-center"><strong>
+                                    <div class="text-center mt-4">
+                                        <img class="w-25 white-filter" src="img/book-icon.svg" alt="Book Icon">
+                                    </div>
+                                    <div class="card-body my-4 mt-0 pt-0 text-center">
+                                        <h4 class="card-title ">จำนวนหนังสือทั้งหมด</h4>
+                                        <p class="card-text fs-1"><strong>
                                                 <?php echo $totalBooks; ?> เล่ม
-                                            </strong>
-                                        </p>
+                                            </strong></p>
                                     </div>
                                 </div>
                             </div>
                             <div class="col-md-6 mb-4">
                                 <div class="card text-white bg-success">
-                                    <div class="card-body my-4">
+                                    <div class="text-center mt-4">
+                                        <img class="w-25 white-filter" src="img/user-icon.svg" alt="User Icon">
+                                    </div>
+                                    <div class="card-body my-4  my-4 mt-0 pt-0">
                                         <h4 class="card-title text-center">จำนวนสมาชิกทั้งหมด</h4>
                                         <p class="card-text fs-1 text-center"><strong>
                                                 <?php echo $totalStudents; ?> คน
@@ -158,7 +159,10 @@
                             </div>
                             <div class="col-md-6 mb-4 ">
                                 <div class="card text-white bg-danger">
-                                    <div class="card-body my-4">
+                                    <div class="text-center mt-4">
+                                        <img class="w-25 white-filter" src="img/borrow.svg" alt="User Icon">
+                                    </div>
+                                    <div class="card-body my-4  my-4 mt-0 pt-0">
                                         <h4 class="card-title text-center">จำนวนการยืมหนังสือทั้งหมด</h4>
                                         <p class="card-text fs-1 text-center"><strong>
                                                 <?php echo $notReturned; ?> เล่ม
@@ -169,7 +173,10 @@
                             </div>
                             <div class="col-md-6 mb-4 ">
                                 <div class="card text-white bg-secondary">
-                                    <div class="card-body my-4">
+                                    <div class="text-center mt-4">
+                                        <img class="w-25 white-filter" src="img/cost.svg" alt="User Icon">
+                                    </div>
+                                    <div class="card-body my-4  my-4 mt-0 pt-0">
                                         <h4 class="card-title text-center">ค่าธรรมเนียมคืนหนังสือเลยกำหนด</h4>
                                         <p class="card-text fs-1 text-center"><strong>
                                                 <?php echo $Fee; ?> บาท/วัน

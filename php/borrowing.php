@@ -11,7 +11,6 @@
 <body>
     <?php
     require_once('../connection.php');
-
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $book_id = $_POST['book_id'];
         $username = $_POST['user_id'];
@@ -19,14 +18,10 @@
         $inputDate = DateTime::createFromFormat('d/m/Y', $borrowdate);
 
         if (!$inputDate) {
-            // Invalid date format
             echo "Invalid date format!";
             exit();
         }
-
         $borrowdateFormatted = $inputDate->format('Y-m-d');
-
-
         $checkUserStmt = $conn->prepare("SELECT user_id FROM users WHERE username = :username");
         $checkUserStmt->bindParam(':username', $username, PDO::PARAM_STR);
         $checkUserStmt->execute();
@@ -44,7 +39,7 @@
             }
         });";
             echo '</script>';
-            exit(); // Stop further execution
+            exit();
         } else {
             $borrowcount = $conn->prepare("SELECT COUNT(*) as count FROM borrow WHERE user_id = :user_id AND returnstatus = '0'");
             $borrowcount->bindParam(':user_id', $user_id, PDO::PARAM_INT);
@@ -63,8 +58,6 @@
                 $updateBorrowStatus = $conn->prepare("UPDATE books SET borrowstatus = borrowstatus + 1 WHERE book_id = :book_id");
                 $updateBorrowStatus->bindParam(':book_id', $book_id, PDO::PARAM_INT);
                 $updateBorrowStatus->execute();
-
-                // Get book name
                 $bookgotborrow = $conn->prepare("SELECT book_name FROM books WHERE book_id = :book_id");
                 $bookgotborrow->bindParam(':book_id', $book_id, PDO::PARAM_INT);
                 $bookgotborrow->execute();
@@ -72,7 +65,6 @@
 
                 if ($bookData) {
                     $book_name = $bookData['book_name'];
-                    // Display SweetAlert2 success
                     echo '<script>';
                     echo "Swal.fire({
                             title: 'ยืมหนังสือสำเร็จ!',
@@ -87,7 +79,6 @@
                     echo '</script>';
                 }
             } else {
-                // Display SweetAlert2 error for reaching book limit
                 echo '<script>';
                 echo "Swal.fire({
                         title: 'คุณยืมหนังสือครบจำนวนที่กำหนดแล้ว!',
@@ -101,8 +92,6 @@
                 echo '</script>';
             }
         }
-
-        // Clear the $_POST array
         $_POST = array();
     }
     include '../script.php';

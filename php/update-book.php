@@ -10,8 +10,7 @@
 
 <body>
     <?php
-    require_once('../connection.php'); // Ensure the connection is established
-    
+    require_once('../connection.php');
     session_start();
     if (!isset($_SESSION["username"])) {
         echo '<script>';
@@ -19,7 +18,6 @@
         echo '</script>';
         exit();
     } else {
-        // Check for the appropriate role or any other necessary conditions
         if ($_SESSION["role"] !== 'librarian') {
             echo '<script>';
             echo 'Swal.fire("คุณไม่มีสิทธิเข้าถึง!", { icon: "error" }).then(() => { window.location.href = "index.php"; });';
@@ -27,9 +25,7 @@
             exit();
         }
     }
-
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
-        // Fetch data from the form
         $user_fname = $_POST['book_name'];
         $user_lname = $_POST['author'];
         $username = $_POST['publisher'];
@@ -37,10 +33,7 @@
         $bookvalue = $_POST['bookvalue'];
         $book_id = $_POST['book_id'];
 
-        // Prepare the SQL statement with placeholders
         $stmt = $conn->prepare("UPDATE books SET book_name = ?, author = ?, publisher = ?, type_id = ?, bookvalue = ? WHERE book_id = ?");
-
-        // Bind parameters to the statement
         $stmt->bindParam(1, $user_fname);
         $stmt->bindParam(2, $user_lname);
         $stmt->bindParam(3, $username);
@@ -48,8 +41,6 @@
         $stmt->bindParam(5, $bookvalue);
         $stmt->bindParam(6, $book_id);
 
-
-        // Execute the prepared statement
         if ($stmt->execute()) {
             echo '<script>';
             echo 'Swal.fire({ title: "แก้ไขหนังสือสำเร็จ!", icon: "success" }).then(() => { window.location.href = "../manage-book.php"; });';
@@ -62,9 +53,6 @@
             exit();
         }
     }
-
-    // Additional code if needed
-    
     ?>
 
 </body>

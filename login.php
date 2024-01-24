@@ -1,12 +1,9 @@
 <!DOCTYPE html>
 <html>
-
-
 <?php
 include("header.php");
 require('connection.php');
 ?>
-
 
 <body style="
             background-color: #2F5597;
@@ -20,8 +17,6 @@ require('connection.php');
                 <div class="bg-dark m-0 text-white text-center py-3">
                     <p class="h2 m-0">โปรแกรมยืมหนังสือ</p>
                 </div>
-
-
                 <div>
                     <form class="p-4 px-5" style="min-width: 450px; width:768px;" name="form1" method="post"
                         action="php/check_login.php">

@@ -93,7 +93,6 @@
     </div>
     <?php
     require('connection.php');
-
     $searchQuery = isset($_GET['search_query']) ? $_GET['search_query'] : '';
     $limit = 10;
     $currentPage = isset($_GET['page']) ? $_GET['page'] : 1;
@@ -177,8 +176,6 @@
             $stmt->bindValue(':search_query', $search, PDO::PARAM_STR);
             $stmt->execute();
             $totalRows = $stmt->fetch(PDO::FETCH_ASSOC)['count'];
-
-            // Retrieve book data
             $stmt = $conn->prepare("SELECT books.*, book_types.type_name 
                     FROM books 
                     LEFT JOIN book_types ON books.type_id = book_types.type_id 
@@ -190,73 +187,55 @@
                         ) 
                     ORDER BY books.book_id DESC 
                     LIMIT :limit OFFSET :offset");
-
             $stmt->bindValue(':search_query', $search, PDO::PARAM_STR);
             $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
             $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
             $stmt->execute();
-
             $booksData = $stmt->fetchAll(PDO::FETCH_ASSOC);
         } else {
             $countStmt = $conn->prepare("SELECT COUNT(*) as count FROM books");
             $countStmt->execute();
             $totalRows = $countStmt->fetch(PDO::FETCH_ASSOC)['count'];
-
             $stmt = $conn->prepare("SELECT *
                         FROM books  
                         ORDER BY book_id DESC 
                         LIMIT :limit OFFSET :offset");
         }
     }
-
     $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
     $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
     $stmt->execute();
     $booksData = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
     $totalPages = ceil($totalRows / $limit);
-
     $stmt = $conn->prepare("SELECT COUNT(*) FROM book_types ");
     $stmt->execute();
-
     $stmt = $conn->prepare("SELECT * FROM book_types ");
     $stmt->execute();
     $typeData = $stmt->fetchAll(PDO::FETCH_ASSOC);
     ?>
-
     <div class="flex-container">
         <div class="container ">
             <div class="my-3 bg-body  shadow ">
-                <!-- ... (Your existing HTML structure before displaying book information) -->
                 <div class="">
-
-
                 </div>
-
-
                 <div class="col">
                     <div class="">
                         <p class="fs-4 p-2 text-center bg-dark text-white m-0">
                             ข้อมูลหนังสือในระบบ
-
                         </p>
                     </div>
                     <form class="m-0 rounded-top  rounded-0 col-md-12 " method="GET">
                         <div
                             class="input-group container bg-secondary px-4 p-2 py-3 mx-auto col-10 row justify-content-md-center ">
                             <div class="form-group col-md-2 p-0">
-                                <select class=" form-control rounded-0 ml-3 col-2 bg-primary text-white border-primary"
-                                    name="
-                                    name=" book_type" id="book_type" onchange="this.form.submit()">
+                                <select class="form-control rounded-0 ml-3 col-2 bg-primary text-white border-primary"
+                                    name="book_type" id="book_type" onchange="this.form.submit()">
                                     <option value="">ทั้งหมด</option>
                                     <?php foreach ($typeData as $type): ?>
                                         <option value="<?php echo $type['type_id']; ?>" <?php if (isset($_GET['book_type']) && !empty($_GET['book_type']) && $type['type_id'] == $user_type) {
                                                echo "selected";
                                            } ?>>
-                                            <?php echo $type['type_name']; ?>
-                                        </option>
-
-                                        <?php echo $type['type_name']; ?>
+                                    <?php echo $type['type_name']; ?>
                                         </option>
                                     <?php endforeach; ?>
                                 </select>
@@ -294,14 +273,12 @@
                             </div>
                         </div>
                     </div>
-
                     </form>
                     <p class="fs-5 rounded p-1 px-3 m-0 form-control border-0 text-center">
                         พบข้อมูลหนังสือ
                         <?php echo $totalRows ?> เล่ม
                     </p>
                     <div class="table-responsive px-3">
-
                         <table class="table table-bordered table-sm m-0 ">
                             <thead>
                                 <tr class="text-center text-light bg-dark col-10">
@@ -334,11 +311,9 @@
                                             if ($typeRow) {
                                                 echo $typeRow['type_name'];
                                             } else {
-
                                             }
                                             ?>
                                         </td>
-
                                         <td class="text-center">
                                             <?php echo $row['author']; ?>
                                         </td>
@@ -366,7 +341,6 @@
                                                 echo 'ไม่มีคนยืม';
                                             }
                                             ?>
-
                                         </td>
                                     </tr>
                                 <?php endforeach; ?>
@@ -384,7 +358,6 @@
                                             </a>
                                         </li>
                                     <?php endif; ?>
-
                                     <?php for ($i = 1; $i <= $totalPages; $i++): ?>
                                         <li class="page-item <?php echo ($i == $currentPage) ? 'active' : ''; ?>">
                                             <a class="page-link" href="?page=<?php echo $i . $queryString; ?>">
@@ -392,7 +365,6 @@
                                             </a>
                                         </li>
                                     <?php endfor; ?>
-
                                     <?php if ($currentPage < $totalPages): ?>
                                         <li class="page-item">
                                             <a class="page-link bg-dark text-white"
@@ -404,20 +376,12 @@
                                     <?php endif; ?>
                                 </ul>
                             </nav>
-
-
                         </div>
                     </div>
                 </div>
-
             </div>
         </div>
     </div>
-
-
-
-
-
     <?php include('script.php'); ?>
 </body>
 
